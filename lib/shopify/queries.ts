@@ -222,3 +222,84 @@ export const getCartQuery = /* GraphQL */ `
   }
   ${cartFragment}
 `;
+
+const articleCardFields = `
+  id
+  handle
+  title
+  excerpt
+  publishedAt
+  blog {
+    handle
+    title
+  }
+  image {
+    url
+    altText
+    width
+    height
+  }
+`;
+
+export const getBlogQuery = /* GraphQL */ `
+  query getBlog($handle: String!, $first: Int = 24) {
+    blog(handle: $handle) {
+      handle
+      title
+      seo {
+        title
+        description
+      }
+      articles(first: $first, sortKey: PUBLISHED_AT, reverse: true) {
+        nodes {
+          ${articleCardFields}
+        }
+      }
+    }
+  }
+`;
+
+export const getLatestArticlesQuery = /* GraphQL */ `
+  query getLatestArticles($first: Int = 3) {
+    articles(first: $first, sortKey: PUBLISHED_AT, reverse: true) {
+      nodes {
+        ${articleCardFields}
+      }
+    }
+  }
+`;
+
+export const getArticleQuery = /* GraphQL */ `
+  query getArticle($blog: String!, $handle: String!) {
+    blog(handle: $blog) {
+      articleByHandle(handle: $handle) {
+        ${articleCardFields}
+        contentHtml
+        tags
+        authorV2 {
+          name
+        }
+        seo {
+          title
+          description
+        }
+      }
+    }
+  }
+`;
+
+export const getBlogsQuery = /* GraphQL */ `
+  query getBlogs {
+    blogs(first: 10) {
+      nodes {
+        handle
+        articles(first: 100) {
+          nodes {
+            handle
+            publishedAt
+          }
+        }
+      }
+    }
+  }
+`;

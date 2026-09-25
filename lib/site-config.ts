@@ -21,6 +21,8 @@ export const siteConfig = {
     facebook: "", // TBC
   },
   contactEmail: "", // TBC
+  /** Shopify blog handle used for the Journal. */
+  journalHandle: "journal",
   /** TBC: confirm fulfilment times with client. */
   dispatchText: "Orders placed before 1pm ET ship the same business day.",
   /** TBC: confirm returns window with client. */
