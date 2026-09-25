@@ -4,12 +4,15 @@ import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { CartDrawer } from "@/components/cart/cart-drawer";
 import { CartProvider } from "@/components/cart/cart-context";
+import { AnalyticsLoader } from "@/components/consent/analytics-loader";
+import { ConsentBanner } from "@/components/consent/consent-banner";
 import { AnnouncementBar } from "@/components/layout/announcement-bar";
 import { Footer } from "@/components/layout/footer";
 import { Header, HeaderShell } from "@/components/layout/header";
 import { ThemeScript } from "@/components/theme/theme-script";
 import { getAnnouncements, getCart, getProducts } from "@/lib/shopify";
 import { CART_COOKIE } from "@/lib/shopify/constants";
+import { jsonLd, organizationJsonLd } from "@/lib/seo";
 import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
 
@@ -73,6 +76,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     >
       <head>
         <ThemeScript />
+        <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(organizationJsonLd())} />
       </head>
       <body className="flex min-h-dvh flex-col">
         <a
@@ -94,6 +98,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           <Footer />
           <CartDrawer upsellPromise={upsellPromise} />
         </CartProvider>
+        <ConsentBanner />
+        <Suspense fallback={null}>
+          <AnalyticsLoader />
+        </Suspense>
       </body>
     </html>
   );
