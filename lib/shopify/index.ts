@@ -8,9 +8,14 @@ import {
   removeFromCartMutation,
   updateCartLinesMutation,
   updateCartNoteMutation,
+  updateBuyerIdentityMutation,
 } from "./mutations";
 import {
+  getArticleQuery,
+  getBlogQuery,
+  getBlogsQuery,
   getCartQuery,
+  getLatestArticlesQuery,
   getCollectionProductsQuery,
   getCollectionQuery,
   getCollectionsQuery,
@@ -24,6 +29,10 @@ import {
   predictiveSearchQuery,
 } from "./queries";
 import type {
+  Article,
+  ArticleCard,
+  Blog,
+  Testimonial,
   Cart,
   CartLine,
   Collection,
@@ -172,6 +181,9 @@ function reshapeProductCard(raw: RawProductCard): ProductCardData {
       activeComplex: m.active_complex ?? null,
       sizeLabel: m.size_label ?? null,
       badge: m.badge ?? null,
+      skinConcerns: parseList(m.skin_concerns),
+      skinTypes: parseList(m.skin_types),
+      routineStep: m.routine_step ?? null,
     },
   };
 }
@@ -191,6 +203,7 @@ function reshapeProduct(raw: RawProduct): Product {
     .filter((f) => f.name?.value)
     .map((f) => ({
       name: f.name!.value!,
+      inci: f.inci?.value ?? null,
       description: f.short_description?.value ?? null,
       image: f.image?.reference?.image ?? null,
     }));
@@ -218,10 +231,7 @@ function reshapeProduct(raw: RawProduct): Product {
     variants: raw.allVariants.nodes,
     meta: {
       ...card.meta,
-      routineStep: d.routine_step ?? null,
       benefits: parseList(d.benefits),
-      skinConcerns: parseList(d.skin_concerns),
-      skinTypes: parseList(d.skin_types),
       resultsClaims: parseList(d.results_claims),
       howToUse: richTextToHtml(d.how_to_use),
       fullIngredients: d.full_ingredients_inci ?? null,
@@ -409,6 +419,81 @@ export async function getAnnouncements(): Promise<string[]> {
     .filter(Boolean);
 }
 
+export async function getFaqItems(): Promise<FaqItem[]> {
+  const items = await getMetaobjects("faq_item", 100);
+  return items
+    .map((m) => fieldsToRecord(m.fields))
+    .filter((f) => f.question?.value && f.answer?.value)
+    .map((f) => ({ question: f.question!.value!, answer: f.answer!.value!, category: f.category?.value ?? null }));
+}
+
+export async function getIngredients(): Promise<Ingredient[]> {
+  const items = await getMetaobjects("ingredient", 50);
+  return items
+    .map((m) => fieldsToRecord(m.fields))
+    .filter((f) => f.name?.value)
+    .map((f) => ({
+      name: f.name!.value!,
+      inci: f.inci?.value ?? null,
+      description: f.short_description?.value ?? null,
+      image: f.image?.reference?.image ?? null,
+    }));
+}
+
+export async function getTestimonials(): Promise<Testimonial[]> {
+  const items = await getMetaobjects("testimonial", 12);
+  return items
+    .map((m) => ({ id: m.id, f: fieldsToRecord(m.fields) }))
+    .filter(({ f }) => f.quote?.value && f.author?.value)
+    .map(({ id, f }) => ({ id, quote: f.quote!.value!, author: f.author!.value! }));
+}
+
+/* Blog / Journal */
+export async function getBlog(handle: string): Promise<Blog | undefined> {
+  "use cache";
+  cacheTag(TAGS.content, `blog:${handle}`);
+  cacheLife("days");
+  if (!isShopifyConfigured()) return undefined;
+  const data = await shopifyFetch<{ blog: (Omit<Blog, "articles"> & { articles: Nodes<ArticleCard> }) | null }>({
+    query: getBlogQuery,
+    variables: { handle },
+  });
+  if (!data.blog) return undefined;
+  return { ...data.blog, articles: data.blog.articles.nodes };
+}
+
+export async function getLatestArticles(first = 3): Promise<ArticleCard[]> {
+  "use cache";
+  cacheTag(TAGS.content, "articles");
+  cacheLife("days");
+  if (!isShopifyConfigured()) return [];
+  const data = await shopifyFetch<{ articles: Nodes<ArticleCard> }>({ query: getLatestArticlesQuery, variables: { first } });
+  return data.articles.nodes;
+}
+
+export async function getArticle(blog: string, handle: string): Promise<Article | undefined> {
+  "use cache";
+  cacheTag(TAGS.content, `article:${blog}/${handle}`);
+  cacheLife("days");
+  if (!isShopifyConfigured()) return undefined;
+  const data = await shopifyFetch<{ blog: { articleByHandle: Article | null } | null }>({
+    query: getArticleQuery,
+    variables: { blog, handle },
+  });
+  return data.blog?.articleByHandle ?? undefined;
+}
+
+export async function getArticlePaths(): Promise<{ blog: string; handle: string; publishedAt: string }[]> {
+  "use cache";
+  cacheTag(TAGS.content, "articles");
+  cacheLife("days");
+  if (!isShopifyConfigured()) return [];
+  const data = await shopifyFetch<{
+    blogs: Nodes<{ handle: string; articles: Nodes<{ handle: string; publishedAt: string }> }>;
+  }>({ query: getBlogsQuery });
+  return data.blogs.nodes.flatMap((b) => b.articles.nodes.map((a) => ({ blog: b.handle, ...a })));
+}
+
 export async function getPage(handle: string): Promise<ShopPage | undefined> {
   "use cache";
   cacheTag(TAGS.content, `page:${handle}`);
@@ -520,3 +605,12 @@ export async function updateCartNote(cartId: string, note: string) {
 }
 
 export type { Money };
+
+/** Links the cart to a signed-in customer so checkout is pre-filled and the order lands in their account. */
+export async function linkCartToCustomer(cartId: string, customerAccessToken: string) {
+  const data = await shopifyFetch<{ cartBuyerIdentityUpdate: { userErrors: { message: string }[] } }>({
+    query: updateBuyerIdentityMutation,
+    variables: { cartId, buyerIdentity: { customerAccessToken } },
+  });
+  return data.cartBuyerIdentityUpdate.userErrors;
+}

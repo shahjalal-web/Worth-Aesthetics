@@ -2,8 +2,10 @@
 
 import { cookies } from "next/headers";
 import { z } from "zod";
+import { getSession } from "@/lib/customer/auth";
 import {
   addToCart,
+  linkCartToCustomer,
   createCart,
   getCart,
   removeFromCart,
@@ -32,18 +34,28 @@ async function currentCartId() {
 }
 
 export async function addItemAction(merchandiseId: string, quantity = 1): Promise<CartResult> {
-  const parsed = z.object({ merchandiseId: gid, quantity: z.number().int().min(1).max(20) }).safeParse({
-    merchandiseId,
-    quantity,
-  });
+  return addLinesAction([{ merchandiseId, quantity }]);
+}
+
+export async function addLinesAction(input: { merchandiseId: string; quantity: number }[]): Promise<CartResult> {
+  const parsed = z
+    .array(z.object({ merchandiseId: gid, quantity: z.number().int().min(1).max(20) }))
+    .min(1)
+    .max(10)
+    .safeParse(input);
   if (!parsed.success) return { error: "Invalid product selection." };
 
   try {
     const cartId = await currentCartId();
     const existing = cartId ? await getCart(cartId) : undefined;
-    const lines = [{ merchandiseId, quantity }];
+    const lines = parsed.data;
     const cart = existing?.id ? await addToCart(existing.id, lines) : await createCart(lines);
-    if (cart.id && cart.id !== cartId) await setCartCookie(cart.id);
+    if (cart.id && cart.id !== cartId) {
+      await setCartCookie(cart.id);
+      // New cart for a signed-in customer → attach identity so the order lands in their account.
+      const session = await getSession();
+      if (session) await linkCartToCustomer(cart.id, session.accessToken).catch(() => undefined);
+    }
     return { cart };
   } catch (e) {
     console.error("addItemAction", e);

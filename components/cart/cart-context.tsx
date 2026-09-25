@@ -12,7 +12,7 @@ import {
   type ReactNode,
 } from "react";
 import type { Cart, CartLine, Money, ProductCardData, ProductVariant } from "@/lib/shopify/types";
-import { addItemAction, updateNoteAction, updateQuantityAction, type CartResult } from "./actions";
+import { addItemAction, addLinesAction, updateNoteAction, updateQuantityAction, type CartResult } from "./actions";
 
 type Op =
   | { type: "add"; product: ProductCardData; variant: ProductVariant; quantity: number }
@@ -28,6 +28,7 @@ type CartContextValue = {
   open: () => void;
   close: () => void;
   addItem: (product: ProductCardData, variant: ProductVariant, quantity?: number) => void;
+  addItems: (items: { product: ProductCardData; variant: ProductVariant; quantity?: number }[]) => void;
   updateQuantity: (lineId: string, quantity: number) => void;
   saveNote: (note: string) => void;
 };
@@ -143,6 +144,18 @@ export function CartProvider({
     [addPending, handle],
   );
 
+  const addItems = useCallback(
+    (items: { product: ProductCardData; variant: ProductVariant; quantity?: number }[]) => {
+      if (!items.length) return;
+      setOpen(true);
+      startTransition(async () => {
+        for (const i of items) addPending({ type: "add", product: i.product, variant: i.variant, quantity: i.quantity ?? 1 });
+        handle(await addLinesAction(items.map((i) => ({ merchandiseId: i.variant.id, quantity: i.quantity ?? 1 }))));
+      });
+    },
+    [addPending, handle],
+  );
+
   const updateQuantity = useCallback(
     (lineId: string, quantity: number) => {
       if (lineId.startsWith("optimistic:")) return;
@@ -174,10 +187,11 @@ export function CartProvider({
       open: () => setOpen(true),
       close: () => setOpen(false),
       addItem,
+      addItems,
       updateQuantity,
       saveNote,
     }),
-    [cartPromise, serverCart, pending, isPending, isOpen, error, addItem, updateQuantity, saveNote],
+    [cartPromise, serverCart, pending, isPending, isOpen, error, addItem, addItems, updateQuantity, saveNote],
   );
 
   return <CartContext value={value}>{children}</CartContext>;
