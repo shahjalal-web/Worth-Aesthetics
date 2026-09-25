@@ -378,7 +378,7 @@ export function EditorialBanner() {
 /* ------------------------------------------------------------------ */
 export function EmailCapture() {
   return (
-    <section className="py-20 md:py-28">
+    <section id="newsletter" className="scroll-mt-24 py-20 md:py-28">
       <Reveal className="container-wa">
         <div className="mx-auto max-w-2xl text-center">
           <MolecularDivider className="mx-auto mb-10 max-w-xs" />

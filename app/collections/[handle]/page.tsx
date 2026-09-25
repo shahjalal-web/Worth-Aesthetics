@@ -9,7 +9,10 @@ import { RecentlyViewed } from "@/components/product/recently-viewed";
 import { ButtonLink } from "@/components/ui/button";
 import { MolecularLattice } from "@/components/brand/molecular";
 import { parseFilters, resolveSort } from "@/lib/collection-params";
-import { getCollection, getCollectionProducts, getCollections, getProducts } from "@/lib/shopify";
+import { getCollection, getCollectionProducts, getCollections, getFaqItems, getProducts } from "@/lib/shopify";
+import { AccordionItem } from "@/components/ui/accordion";
+import { fallbackFaq } from "@/content/site-copy";
+import { faqJsonLd, jsonLd } from "@/lib/seo";
 import type { Collection } from "@/lib/shopify/types";
 
 const PAGE_SIZE = 24;
@@ -68,6 +71,7 @@ export default function CollectionPage(props: PageProps<"/collections/[handle]">
           <CollectionGrid {...props} />
         </Suspense>
       </div>
+      <CollectionFaq />
       <RecentlyViewed />
     </>
   );
@@ -135,14 +139,24 @@ async function CollectionGrid({ params, searchParams }: PageProps<"/collections/
 
   return (
     <div className="pt-8">
-      <CollectionToolbar filters={data.filters} count={data.products.length} />
+      <CollectionToolbar filters={data.filters} count={data.products.length}>
       {data.products.length ? (
-        <ul className="mt-10 grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 md:gap-x-6 md:gap-y-16 lg:grid-cols-4 lg:gap-x-8">
-          {data.products.map((p, i) => (
-            <li key={p.id}>
-              <ProductCard product={p} priority={i < 4} />
-            </li>
-          ))}
+        <ul
+          className={
+            data.filters.length
+              ? "mt-10 grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 md:gap-x-6 md:gap-y-16 lg:gap-x-8"
+              : "mt-10 grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 md:gap-x-6 md:gap-y-16 lg:grid-cols-4 lg:gap-x-8"
+          }
+        >
+          {data.products.flatMap((p, i) => {
+            const card = (
+              <li key={p.id}>
+                <ProductCard product={p} priority={i < 4} />
+              </li>
+            );
+            // Editorial tile after the 5th product (OSEA-style in-grid banner).
+            return i === 4 && data.products.length > 6 ? [card, <PromoTile key="promo" />] : [card];
+          })}
           <LoadMore
             handle={handle}
             sort={sortParam}
@@ -166,7 +180,54 @@ async function CollectionGrid({ params, searchParams }: PageProps<"/collections/
           </ButtonLink>
         </div>
       )}
+      </CollectionToolbar>
     </div>
+  );
+}
+
+function PromoTile() {
+  return (
+    <li className="col-span-2 md:col-span-1">
+      <Link
+        href="/pages/routine"
+        className="group relative flex h-full min-h-72 flex-col justify-end overflow-hidden bg-charcoal p-8 text-alabaster dark:bg-[#0e0d0c]"
+      >
+        <MolecularLattice className="pointer-events-none absolute -top-8 -right-8 w-56 opacity-20 transition-transform duration-700 group-hover:scale-105" />
+        <p className="eyebrow relative text-taupe">Build your routine</p>
+        <p className="serif-italic relative mt-3 text-3xl leading-tight">Not sure where to begin?</p>
+        <span className="label-caps relative mt-6 text-[10px] underline decoration-taupe underline-offset-[6px]">Take the quiz</span>
+      </Link>
+    </li>
+  );
+}
+
+async function CollectionFaq() {
+  const fromShopify = await getFaqItems();
+  const faq = (fromShopify.length ? fromShopify : fallbackFaq).filter((f) => f.category === "Products & Usage").slice(0, 5);
+  if (!faq.length) return null;
+  return (
+    <section className="border-t border-line bg-bg-soft py-16 md:py-24" aria-labelledby="collection-faq">
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(faqJsonLd(faq))} />
+      <div className="container-wa grid gap-12 lg:grid-cols-12">
+        <div className="lg:col-span-4">
+          <p className="eyebrow text-accent-ink">Good to know</p>
+          <h2 id="collection-faq" className="mt-4 text-[26px] leading-tight font-light tracking-[0.06em] uppercase md:text-[32px]">
+            Peptide skincare, <span className="serif-italic tracking-normal normal-case text-accent-ink">explained</span>
+          </h2>
+          <p className="mt-5 text-[14px] leading-relaxed text-muted">
+            Worth Aesthetics formulas pair multi-peptide complexes with NAD+, PDRN and hyaluronic acid for skin that looks
+            firmer, smoother and more radiant.
+          </p>
+        </div>
+        <div className="border-t border-line lg:col-span-7 lg:col-start-6">
+          {faq.map((f) => (
+            <AccordionItem key={f.question} title={f.question}>
+              <p>{f.answer}</p>
+            </AccordionItem>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 

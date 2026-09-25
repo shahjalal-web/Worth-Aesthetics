@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useState, useTransition, type ReactNode } from "react";
 import type { Filter } from "@/lib/shopify/types";
 import { SORT_OPTIONS } from "@/lib/collection-params";
 import { cn } from "@/lib/utils";
@@ -10,7 +10,7 @@ import { ChevronDownIcon, CloseIcon } from "@/components/ui/icons";
 import { Sheet } from "@/components/ui/sheet";
 
 /** Filters come from Shopify Search & Discovery; each value carries its own `input` JSON. */
-export function CollectionToolbar({ filters, count }: { filters: Filter[]; count: number }) {
+export function CollectionToolbar({ filters, count, children }: { filters: Filter[]; count: number; children?: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -66,6 +66,36 @@ export function CollectionToolbar({ filters, count }: { filters: Filter[]; count
 
   const listFilters = filters.filter((f) => f.type !== "PRICE_RANGE" && f.values.length);
   const priceFilter = filters.find((f) => f.type === "PRICE_RANGE");
+  const panel = (
+    <>
+            {listFilters.map((f) => (
+              <fieldset key={f.id} className="py-6">
+                <legend className="label-caps float-left mb-4 w-full text-[10.5px]">{f.label}</legend>
+                <ul className="clear-both space-y-3">
+                  {f.values.map((v) => {
+                    const checked = active.includes(v.input);
+                    return (
+                      <li key={v.id}>
+                        <label className={cn("flex cursor-pointer items-center gap-3 text-[14px]", !v.count && !checked && "opacity-40")}>
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            disabled={!v.count && !checked}
+                            onChange={() => toggle(v.input)}
+                            className="size-4 accent-[var(--accent)]"
+                          />
+                          <span className="flex-1">{v.label}</span>
+                          <span className="text-[12px] text-muted">{v.count}</span>
+                        </label>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </fieldset>
+            ))}
+            {priceFilter && <PriceFields onApply={setPrice} />}
+    </>
+  );
 
   return (
     <div className={cn("transition-opacity", isPending && "opacity-60")}>
@@ -75,7 +105,7 @@ export function CollectionToolbar({ filters, count }: { filters: Filter[]; count
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="label-caps inline-flex items-center gap-2 text-[10.5px] hover:text-accent-ink"
+              className="label-caps inline-flex items-center gap-2 text-[10.5px] hover:text-accent-ink lg:hidden"
             >
               <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.2" aria-hidden>
                 <path d="M4 7h10M18 7h2M4 17h4M12 17h8" />
@@ -85,7 +115,7 @@ export function CollectionToolbar({ filters, count }: { filters: Filter[]; count
               Filter{active.length > 0 && <span className="text-accent-ink">({active.length})</span>}
             </button>
           )}
-          <span className="hidden text-[12px] text-muted sm:inline">
+          <span className="hidden text-[12px] text-muted sm:inline lg:hidden">
             {count} {count === 1 ? "product" : "products"}
           </span>
         </div>
@@ -135,6 +165,20 @@ export function CollectionToolbar({ filters, count }: { filters: Filter[]; count
         </ul>
       )}
 
+      <div className={cn(filters.length > 0 && "lg:grid lg:grid-cols-[220px_1fr] lg:gap-12")}>
+        {filters.length > 0 && (
+          <aside aria-label="Filters" className="hidden pt-6 lg:block">
+            <div className="sticky top-32 divide-y divide-line">
+              <p className="pb-2 text-[12px] text-muted">
+                {count} {count === 1 ? "product" : "products"}
+              </p>
+              {panel}
+            </div>
+          </aside>
+        )}
+        <div>{children}</div>
+      </div>
+
       <Sheet open={open} onClose={() => setOpen(false)} side="left" label="Filters">
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between border-b border-line px-6 py-5">
@@ -144,32 +188,7 @@ export function CollectionToolbar({ filters, count }: { filters: Filter[]; count
             </button>
           </div>
           <div className="flex-1 divide-y divide-line overflow-y-auto px-6">
-            {listFilters.map((f) => (
-              <fieldset key={f.id} className="py-6">
-                <legend className="label-caps float-left mb-4 w-full text-[10.5px]">{f.label}</legend>
-                <ul className="clear-both space-y-3">
-                  {f.values.map((v) => {
-                    const checked = active.includes(v.input);
-                    return (
-                      <li key={v.id}>
-                        <label className={cn("flex cursor-pointer items-center gap-3 text-[14px]", !v.count && !checked && "opacity-40")}>
-                          <input
-                            type="checkbox"
-                            checked={checked}
-                            disabled={!v.count && !checked}
-                            onChange={() => toggle(v.input)}
-                            className="size-4 accent-[var(--accent)]"
-                          />
-                          <span className="flex-1">{v.label}</span>
-                          <span className="text-[12px] text-muted">{v.count}</span>
-                        </label>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </fieldset>
-            ))}
-            {priceFilter && <PriceFields onApply={setPrice} />}
+            {panel}
           </div>
           <div className="grid grid-cols-2 gap-3 border-t border-line p-6">
             <Button variant="outline" onClick={clearAll}>

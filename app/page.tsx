@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/home/hero";
+import { BenefitsGrid, BrandStatement, JournalRail, QuizCta, Testimonials } from "@/components/home/more-sections";
 import {
   ComingSoonRail,
   EditorialBanner,
@@ -11,7 +12,7 @@ import {
   ScienceBand,
   TrustStrip,
 } from "@/components/home/sections";
-import { getCollectionProducts, getHeroSlides, getProducts } from "@/lib/shopify";
+import { getCollectionProducts, getHeroSlides, getLatestArticles, getProducts, getTestimonials } from "@/lib/shopify";
 import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
@@ -20,37 +21,36 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [slides, bestsellersCollection, allProducts] = await Promise.all([
+  const [slides, bestsellersCollection, allProducts, testimonials, articles] = await Promise.all([
     getHeroSlides(),
     getCollectionProducts({ handle: "bestsellers", first: 4 }),
     getProducts({ sortKey: "BEST_SELLING", first: 8 }),
+    getTestimonials(),
+    getLatestArticles(3),
   ]);
 
-  const bestsellers = bestsellersCollection.products.length
-    ? bestsellersCollection.products
-    : allProducts;
+  const bestsellers = bestsellersCollection.products.length ? bestsellersCollection.products : allProducts;
   const featured = allProducts.find((p) => /cream/i.test(p.title));
 
   return (
     <>
       <Hero slide={slides[0]} />
       <TrustStrip />
+      <BrandStatement />
       {bestsellers.length ? (
-        <ProductRail
-          eyebrow="Most Loved"
-          title="The"
-          accent="bestsellers"
-          products={bestsellers}
-          href="/collections/bestsellers"
-        />
+        <ProductRail eyebrow="Most Loved" title="The" accent="bestsellers" products={bestsellers} href="/collections/bestsellers" />
       ) : (
         <ComingSoonRail />
       )}
       <ScienceBand />
       <FeaturedSplit product={featured} />
       <IngredientSpotlight />
+      <QuizCta />
       <RitualSteps />
+      <Testimonials items={testimonials} />
       <EditorialBanner />
+      <JournalRail articles={articles} />
+      <BenefitsGrid />
       <EmailCapture />
     </>
   );
