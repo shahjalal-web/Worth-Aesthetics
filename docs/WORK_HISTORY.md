@@ -16,11 +16,41 @@ npx tsx scripts/screenshot.mts http://localhost:3000/ <outDir> light|dark   # vi
 ```
 
 **Next up (in order):**
-1. ⏳ Client/owner creates products + collections + metafield definitions in Shopify (see `docs/SHOPIFY_SETUP.md`) — the store is currently **empty**, so PLP/PDP/cart can't be tested end-to-end yet.
-2. ⏳ Install the Dev-Dashboard app on the store (currently `app_not_installed`) → enables Admin API for `scripts/setup-metafields.ts` (to be written, with `--dry-run`).
-3. ⏳ Phase 3: bespoke **Science** and **About** pages, blog/journal, metaobject-driven home sections.
-4. ⏳ Predictive search overlay in header (API query already written: `predictiveSearch`).
-5. ⏳ Phase 4: Customer Account API login, GA4/Meta + Shopify analytics, consent banner, sitemap/robots.
+1. ⛔ **Disable the Online Store password** in Shopify — checkout currently redirects to `/password`.
+2. ⛔ **Customer Account API client ID** (Headless channel → Customer Account API) + an https URL (Vercel deploy or ngrok) → account login goes live. Code is done.
+3. ⏳ Deploy to Vercel (`docs/DEPLOY.md`), then `scripts/setup-webhooks.mts --url https://…`.
+4. ⏳ Search & Discovery filters for `worth.skin_concerns` / `worth.skin_types`.
+5. ⏳ Client items from `docs/OPEN_QUESTIONS.md` (logo SVG, real prices/photos, returns, Klaviyo, reviews app).
+6. ⏳ Optional: Shopify analytics via `@shopify/hydrogen-react` (`sendShopifyAnalytics`), Lighthouse pass, axe audit.
+
+---
+
+## Session 2 — 2026-09-25 (full site build)
+
+### Shopify (live store — with owner approval)
+- ✅ Admin API now works via client-credentials (app installed; scopes: products, metaobjects, content, publications, files…)
+- ⚠️ Metafield namespace is **`worth`** (Shopify requires ≥ 3 chars, so CLAUDE.md’s `wa` is impossible)
+- ✅ `scripts/setup-metafields.mts` → 5 metaobject definitions (ingredient, faq_item, hero_slide, announcement, testimonial) + 14 `worth.*` product metafields
+- ✅ `scripts/seed-content.mts` → 12 smart collections (type/tag rules), Journal blog, 11 FAQ, 8 ingredients, 2 announcements — published to Headless
+- ✅ `scripts/seed-products.mts --active` → 4 products with images, metafields, **placeholder prices** ($68/$88/$78/$35, tag `tbc`)
+- ✅ `scripts/setup-webhooks.mts` written (needs the public URL)
+- Smart-collection rules: type **Serum/Cream/Set/Accessory**; tags **bestseller**, **new**, **concern:wrinkles|firmness|texture|dullness|hydration**
+
+### Pages / features added
+- ✅ /pages/science, /about, /ingredients, /faq (+FAQPage JSON-LD), /contact (Resend, TBC), /accessibility, /routine (quiz → batch add to bag)
+- ✅ /blogs/[blog] + /blogs/[blog]/[article] (Article JSON-LD, shop-the-story)
+- ✅ Customer accounts: OAuth+PKCE (`/account/login|authorize|logout`), encrypted session cookie, token refresh, dashboard, orders, order detail (tracking, status page), addresses (add/edit/delete/default), profile; cart linked to customer on login
+- ✅ Predictive search overlay (`/api/search`)
+- ✅ Consent banner (Shopify Customer Privacy API) + GA4/Meta loaded only after consent; events view_item, add_to_cart, begin_checkout, page_view
+- ✅ sitemap.xml, robots.txt, Organization JSON-LD, default OG image
+- ✅ Home: brand statement, quiz CTA, testimonials (metaobjects only), journal rail, benefits grid
+- ✅ PLP: desktop filter sidebar, in-grid promo tile, SEO FAQ; PDP: journal rail, gallery fix for single images
+- ✅ docs/DEPLOY.md, docs/BUILD_PLAN.md
+
+### Verified
+- End-to-end with real products: add to bag (optimistic 175 ms) → drawer → qty update → subtotal correct → cart survives reload → checkoutUrl on Shopify (blocked only by store password)
+- Webhook HMAC → revalidateTag refreshes cached catalog
+- 52 routes build; tsc + eslint clean; no console errors; no horizontal overflow at 390 px; light + dark checked
 
 ---
 

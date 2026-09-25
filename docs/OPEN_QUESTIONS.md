@@ -26,6 +26,7 @@ Items the storefront currently shows as placeholders. Nothing here should be pre
 - [ ] Full INCI lists per product.
 
 ## Integrations
+- [ ] Contact-form inbox (Resend API key + destination email) or another provider.
 - [ ] Email/SMS: **Klaviyo** or Shopify Email? (newsletter form waiting on this)
 - [ ] Reviews: Judge.me or Okendo?
 - [ ] GA4 ID, Meta Pixel ID.
@@ -33,6 +34,8 @@ Items the storefront currently shows as placeholders. Nothing here should be pre
 - [ ] Build-your-routine quiz — phase 2?
 
 ## Technical access
-- [ ] **Install the Dev-Dashboard app** on the store (client-credentials grant returns `app_not_installed`) — needed for Admin-API setup scripts.
+- [x] ~~Install the Dev-Dashboard app~~ — done.
+- [ ] **Disable the Online Store password** so checkout works for visitors.
+- [ ] Confirm the placeholder prices on the 4 seeded products (tag `tbc`) and upload final photography.
 - [ ] **Customer Account API** client ID + API URL (Headless channel → Customer Account API).
 - [ ] Production domain.
