@@ -9,6 +9,7 @@ import { BagButton } from "@/components/cart/bag-button";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { ArrowRightIcon, ChevronRightIcon, CloseIcon, MenuIcon, SearchIcon, UserIcon } from "@/components/ui/icons";
 import { Sheet } from "@/components/ui/sheet";
+import { SearchOverlay } from "./search-overlay";
 import { mainNav, type NavItem } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 
@@ -26,6 +27,7 @@ function HeaderInner({ pathname }: { pathname: string | null }) {
   const [scrolled, setScrolled] = useState(false);
   const [mega, setMega] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const closeTimer = useRef<number | undefined>(undefined);
 
   useEffect(() => {
@@ -41,6 +43,7 @@ function HeaderInner({ pathname }: { pathname: string | null }) {
     setLastPath(pathname);
     setMega(null);
     setMobileOpen(false);
+    setSearchOpen(false);
   }
 
   useEffect(() => {
@@ -80,13 +83,14 @@ function HeaderInner({ pathname }: { pathname: string | null }) {
           >
             <MenuIcon className="size-[22px]" />
           </button>
-          <Link
-            href="/search"
+          <button
+            type="button"
+            onClick={() => setSearchOpen(true)}
             className="inline-flex size-10 items-center justify-center lg:hidden"
             aria-label="Search"
           >
             <SearchIcon className="size-[19px]" />
-          </Link>
+          </button>
           <nav aria-label="Primary" className="hidden lg:block">
             <ul className="flex items-center gap-8 xl:gap-10">
               {mainNav.map((item) => (
@@ -132,13 +136,14 @@ function HeaderInner({ pathname }: { pathname: string | null }) {
 
         {/* Right: utilities */}
         <div className="flex items-center justify-end gap-0.5 md:gap-1.5">
-          <Link
-            href="/search"
+          <button
+            type="button"
+            onClick={() => setSearchOpen(true)}
             className="hidden size-10 items-center justify-center transition-colors hover:text-accent-ink lg:inline-flex"
             aria-label="Search"
           >
             <SearchIcon className="size-[19px]" />
-          </Link>
+          </button>
           <Link
             href="/account"
             className="hidden size-10 items-center justify-center transition-colors hover:text-accent-ink sm:inline-flex"
@@ -165,6 +170,7 @@ function HeaderInner({ pathname }: { pathname: string | null }) {
       </div>
 
       <MobileNav open={mobileOpen} onClose={() => setMobileOpen(false)} />
+      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );
 }

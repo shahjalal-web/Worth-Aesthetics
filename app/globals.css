@@ -335,3 +335,23 @@ html:has(.wa-sheet[open]) {
 .wa-prose strong {
   font-weight: 500;
 }
+
+/* Search overlay — drops down from the top */
+.wa-search {
+  translate: 0 -100%;
+  transition:
+    translate 320ms var(--ease-luxe),
+    overlay 320ms allow-discrete,
+    display 320ms allow-discrete;
+}
+.wa-search[open] {
+  translate: 0 0;
+}
+@starting-style {
+  .wa-search[open] {
+    translate: 0 -100%;
+  }
+}
+html:has(.wa-search[open]) {
+  overflow: hidden;
+}

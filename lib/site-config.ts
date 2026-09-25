@@ -62,6 +62,9 @@ export const mainNav: NavItem[] = [
           links: [
             { label: "Bestsellers", href: "/collections/bestsellers" },
             { label: "New Arrivals", href: "/collections/new" },
+            { label: "Build Your Routine", href: "/pages/routine" },
+            { label: "Ingredient Glossary", href: "/pages/ingredients" },
+            { label: "The Journal", href: "/blogs/journal" },
           ],
         },
       ],
@@ -117,6 +120,8 @@ export const footerNav: NavGroup[] = [
     title: "Discover",
     links: [
       { label: "The Science", href: "/pages/science" },
+      { label: "Ingredients", href: "/pages/ingredients" },
+      { label: "Build Your Routine", href: "/pages/routine" },
       { label: "Our Story", href: "/pages/about" },
       { label: "Journal", href: "/blogs/journal" },
     ],
