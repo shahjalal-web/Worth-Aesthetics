@@ -12,7 +12,8 @@ import { AccordionItem } from "@/components/ui/accordion";
 import { TruckIcon } from "@/components/ui/icons";
 import { PaymentBadges, TrustRow } from "@/components/ui/trust-row";
 import { breadcrumbJsonLd, faqJsonLd, jsonLd, productJsonLd } from "@/lib/seo";
-import { getProduct, getProductHandles, getProductRecommendations } from "@/lib/shopify";
+import { getLatestArticles, getProduct, getProductHandles, getProductRecommendations } from "@/lib/shopify";
+import { JournalRail } from "@/components/home/more-sections";
 import type { Product } from "@/lib/shopify/types";
 import { siteConfig } from "@/lib/site-config";
 
@@ -70,6 +71,7 @@ async function ProductContent({ params }: Pick<PageProps<"/products/[handle]">, 
         <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(faqJsonLd(meta.faq))} />
       )}
       <TrackRecentlyViewed
+        productId={product.id}
         item={{
           handle: product.handle,
           title: product.title,
@@ -205,9 +207,16 @@ async function ProductContent({ params }: Pick<PageProps<"/products/[handle]">, 
         </section>
       )}
 
+      <Suspense fallback={null}>
+        <PdpJournal />
+      </Suspense>
       <RecentlyViewed exclude={product.handle} />
     </>
   );
+}
+
+async function PdpJournal() {
+  return <JournalRail articles={await getLatestArticles(3)} />;
 }
 
 function IngredientSpotlight({ product }: { product: Product }) {
@@ -222,7 +231,15 @@ function IngredientSpotlight({ product }: { product: Product }) {
             Key <span className="serif-italic tracking-normal normal-case text-accent-ink">actives</span>
           </h2>
         </div>
-        <ul className="mt-12 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-4">
+        <ul
+          className={
+            items.length >= 4
+              ? "mt-12 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-4"
+              : items.length === 3
+                ? "mt-12 grid gap-px bg-line md:grid-cols-3"
+                : "mx-auto mt-12 grid max-w-4xl gap-px bg-line sm:grid-cols-2"
+          }
+        >
           {items.slice(0, 4).map((ing) => (
             <li key={ing.name} className="bg-surface p-8">
               {ing.image && (

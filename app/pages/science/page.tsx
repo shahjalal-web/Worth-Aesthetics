@@ -101,7 +101,7 @@ export default async function SciencePage() {
           <ul className="mt-14 grid gap-x-10 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
             {actives.map((ing, i) => (
               <Reveal as="li" key={ing.name} delay={(i % 3) * 90}>
-                <p className="text-[40px] leading-none font-extralight tracking-[0.03em]">{ing.name}</p>
+                <p className={ing.name.length > 14 ? "text-[28px] leading-tight font-extralight tracking-[0.02em]" : "text-[40px] leading-none font-extralight tracking-[0.03em]"}>{ing.name}</p>
                 {ing.inci && <p className="serif-italic mt-3 text-lg text-accent-ink">{ing.inci}</p>}
                 <MolecularDivider className="my-6 opacity-70" />
                 {ing.description && <p className="text-[14px] leading-relaxed text-muted">{ing.description}</p>}
@@ -163,7 +163,7 @@ export default async function SciencePage() {
       <section className="border-t border-line bg-bg-soft py-20 text-center md:py-24">
         <Reveal className="container-wa">
           <p className="serif-italic text-3xl md:text-4xl">Find the formula for you</p>
-          <p className="mx-auto mt-4 max-w-md text-[15px] text-muted">Answer four questions and we&apos;ll build your ritual.</p>
+          <p className="mx-auto mt-4 max-w-md text-[15px] text-muted">Answer three questions and we&apos;ll build your ritual.</p>
           <div className="mt-9 flex flex-wrap justify-center gap-4">
             <ButtonLink href="/pages/routine">Build your routine</ButtonLink>
             <ButtonLink href="/collections/shop-all" variant="outline">

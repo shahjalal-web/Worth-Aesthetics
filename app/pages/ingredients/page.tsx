@@ -60,7 +60,7 @@ export default async function IngredientsPage() {
                     </div>
                   )}
                   <div className="flex-1">
-                    <h2 className="text-[28px] leading-none font-extralight tracking-[0.03em] md:text-[34px]">{ing.name}</h2>
+                    <h2 className="text-[26px] leading-tight font-extralight tracking-[0.03em] md:text-[32px]">{ing.name}</h2>
                     {ing.inci && <p className="serif-italic mt-2 text-lg text-accent-ink">{ing.inci}</p>}
                     <MolecularDivider className="my-5 opacity-70" />
                     {ing.description && <p className="text-[14px] leading-relaxed text-muted">{ing.description}</p>}

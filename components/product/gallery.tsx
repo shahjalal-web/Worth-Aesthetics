@@ -26,7 +26,7 @@ export function ProductGallery({ images, title }: { images: ShopifyImage[]; titl
   };
 
   return (
-    <div className="lg:grid lg:grid-cols-[76px_1fr] lg:gap-5">
+    <div className={cn(images.length > 1 && "lg:grid lg:grid-cols-[76px_1fr] lg:gap-5")}>
       {/* Thumbnails (desktop) */}
       {images.length > 1 && (
         <ul className="hidden max-h-[calc(100svh-12rem)] flex-col gap-3 overflow-y-auto lg:flex" aria-label="Product images">

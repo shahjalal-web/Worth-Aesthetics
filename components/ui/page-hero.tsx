@@ -71,7 +71,7 @@ export function PageHero({
       >
         <div className={cn(!image && "mx-auto max-w-3xl")}>
           {crumbs && (
-            <div className={cn("mb-8", !image && "flex justify-center")}>
+            <div className={cn("mb-8", !image && "flex justify-center", dark && "[&_*]:text-alabaster/60 [&_[aria-current]]:text-alabaster")}>
               <Breadcrumbs items={crumbs} />
             </div>
           )}
