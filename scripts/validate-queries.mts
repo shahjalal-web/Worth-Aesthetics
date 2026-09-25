@@ -7,7 +7,7 @@ const vars: Record<string, object> = {
   getProductQuery: { handle: "x" }, getCollectionQuery: { handle: "frontpage" },
   getCollectionProductsQuery: { handle: "frontpage" }, getProductRecommendationsQuery: { productId: "gid://shopify/Product/1" },
   predictiveSearchQuery: { query: "serum" }, getMetaobjectsQuery: { type: "hero_slide" }, getPageQuery: { handle: "about" },
-  getCartQuery: { cartId: "gid://shopify/Cart/x" },
+  getCartQuery: { cartId: "gid://shopify/Cart/x" }, getBlogQuery: { handle: "news" }, getArticleQuery: { blog: "news", handle: "x" },
 };
 for (const [name, query] of Object.entries({ ...Q, ...M }).filter(([, v]) => typeof v === "string") as [string, string][]) {
   const isMut = name.endsWith("Mutation");

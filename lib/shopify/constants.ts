@@ -11,7 +11,7 @@ export const SHOPIFY_GRAPHQL_ENDPOINT = SHOPIFY_STORE_DOMAIN
   : "";
 
 /** Metafield namespace used for all custom product content. */
-export const WA_NAMESPACE = "wa";
+export const WA_NAMESPACE = "worth"; // Shopify requires ≥ 3 chars, so not "wa"
 
 /** Cache tags used with `cacheTag` / `revalidateTag`. */
 export const TAGS = {

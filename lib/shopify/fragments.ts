@@ -10,10 +10,13 @@ export const imageFragment = /* GraphQL */ `
 `;
 
 const cardMetafieldIds = `[
-  { namespace: "wa", key: "subtitle" }
-  { namespace: "wa", key: "active_complex" }
-  { namespace: "wa", key: "size_label" }
-  { namespace: "wa", key: "badge" }
+  { namespace: "worth", key: "subtitle" }
+  { namespace: "worth", key: "active_complex" }
+  { namespace: "worth", key: "size_label" }
+  { namespace: "worth", key: "badge" }
+  { namespace: "worth", key: "skin_concerns" }
+  { namespace: "worth", key: "skin_types" }
+  { namespace: "worth", key: "routine_step" }
 ]`;
 
 /** Minimal product data for cards / rails / upsells. */
@@ -127,19 +130,16 @@ export const productFragment = /* GraphQL */ `
     }
     detailMeta: metafields(
       identifiers: [
-        { namespace: "wa", key: "routine_step" }
-        { namespace: "wa", key: "benefits" }
-        { namespace: "wa", key: "skin_concerns" }
-        { namespace: "wa", key: "skin_types" }
-        { namespace: "wa", key: "results_claims" }
-        { namespace: "wa", key: "how_to_use" }
-        { namespace: "wa", key: "full_ingredients_inci" }
+        { namespace: "worth", key: "benefits" }
+        { namespace: "worth", key: "results_claims" }
+        { namespace: "worth", key: "how_to_use" }
+        { namespace: "worth", key: "full_ingredients_inci" }
       ]
     ) {
       key
       value
     }
-    keyIngredients: metafield(namespace: "wa", key: "key_ingredients") {
+    keyIngredients: metafield(namespace: "worth", key: "key_ingredients") {
       references(first: 12) {
         nodes {
           ... on Metaobject {
@@ -158,7 +158,7 @@ export const productFragment = /* GraphQL */ `
         }
       }
     }
-    faq: metafield(namespace: "wa", key: "faq") {
+    faq: metafield(namespace: "worth", key: "faq") {
       references(first: 20) {
         nodes {
           ... on Metaobject {
@@ -170,7 +170,7 @@ export const productFragment = /* GraphQL */ `
         }
       }
     }
-    pairsWellWith: metafield(namespace: "wa", key: "pairs_well_with") {
+    pairsWellWith: metafield(namespace: "worth", key: "pairs_well_with") {
       references(first: 6) {
         nodes {
           ... on Product {

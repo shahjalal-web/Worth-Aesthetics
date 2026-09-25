@@ -6,7 +6,7 @@ The storefront reads **all** content from Shopify. Until these exist, the site s
 For each product: title, description, images (first image = card image; second = hover image), price, compare-at price (for "Save X%" badges), variants (e.g. 30 ml / 50 ml), SEO title/description.
 Tag a product `hidden` to hide it from the storefront.
 
-## 2. Product metafields — namespace `wa`
+## 2. Product metafields — namespace `worth`
 Settings → Custom data → Products → Add definition. Tick **"Storefronts" access** on every definition.
 
 | Name | Key | Type |
@@ -38,7 +38,7 @@ Settings → Custom data → Products → Add definition. Tick **"Storefronts" a
 `shop-all`, `serums`, `creams-moisturizers`, `sets`, `bestsellers`, `new`, `accessories`, `anti-wrinkle`, `firming`, `texture`, `radiance`, `hydration`.
 
 ## 5. Filters
-Install **Shopify Search & Discovery** → Filters → add: Availability, Price, Product type, and the metafields `wa.skin_concerns`, `wa.skin_types`.
+Install **Shopify Search & Discovery** → Filters → add: Availability, Price, Product type, and the metafields `worth.skin_concerns`, `worth.skin_types`.
 
 ## 6. Headless channel
 Make sure every product/collection is **published to the Headless channel** (otherwise the Storefront API won't return it).

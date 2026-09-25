@@ -25,13 +25,14 @@ export type ProductVariant = {
 
 export type Ingredient = {
   name: string;
+  inci?: string | null;
   description: string | null;
   image: Image | null;
 };
 
-export type FaqItem = { question: string; answer: string };
+export type FaqItem = { question: string; answer: string; category?: string | null };
 
-/** Content stored in product metafields (namespace `wa`). All optional. */
+/** Content stored in product metafields (namespace `worth`). All optional. */
 export type ProductMeta = {
   subtitle: string | null;
   activeComplex: string | null;
@@ -85,7 +86,7 @@ export type ProductCardData = Pick<
   | "options"
   | "tags"
 > & {
-  meta: Pick<ProductMeta, "subtitle" | "activeComplex" | "sizeLabel" | "badge">;
+  meta: Pick<ProductMeta, "subtitle" | "activeComplex" | "sizeLabel" | "badge" | "skinConcerns" | "skinTypes" | "routineStep">;
 };
 
 export type Collection = {
@@ -162,3 +163,29 @@ export type ShopPage = {
 };
 
 export type Policy = { title: string; handle: string; body: string; url: string };
+
+export type ArticleCard = {
+  id: string;
+  handle: string;
+  title: string;
+  excerpt: string | null;
+  publishedAt: string;
+  blog: { handle: string; title: string };
+  image: Image | null;
+};
+
+export type Article = ArticleCard & {
+  contentHtml: string;
+  tags: string[];
+  authorV2: { name: string } | null;
+  seo: { title: string | null; description: string | null };
+};
+
+export type Blog = {
+  handle: string;
+  title: string;
+  seo: { title: string | null; description: string | null };
+  articles: ArticleCard[];
+};
+
+export type Testimonial = { id: string; quote: string; author: string };
