@@ -12,11 +12,20 @@ import { Sheet } from "@/components/ui/sheet";
 import { mainNav, type NavItem } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 
+/** Header with active-link state (reads the URL — render inside <Suspense>). */
 export function Header() {
+  return <HeaderInner pathname={usePathname()} />;
+}
+
+/** Identical header without URL state — used as the Suspense fallback / static shell. */
+export function HeaderShell() {
+  return <HeaderInner pathname={null} />;
+}
+
+function HeaderInner({ pathname }: { pathname: string | null }) {
   const [scrolled, setScrolled] = useState(false);
   const [mega, setMega] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const pathname = usePathname();
   const closeTimer = useRef<number | undefined>(undefined);
 
   useEffect(() => {

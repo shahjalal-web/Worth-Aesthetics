@@ -1,11 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Inter, Montserrat } from "next/font/google";
 import { cookies } from "next/headers";
+import { Suspense } from "react";
 import { CartDrawer } from "@/components/cart/cart-drawer";
 import { CartProvider } from "@/components/cart/cart-context";
 import { AnnouncementBar } from "@/components/layout/announcement-bar";
 import { Footer } from "@/components/layout/footer";
-import { Header } from "@/components/layout/header";
+import { Header, HeaderShell } from "@/components/layout/header";
 import { ThemeScript } from "@/components/theme/theme-script";
 import { getAnnouncements, getCart, getProducts } from "@/lib/shopify";
 import { CART_COOKIE } from "@/lib/shopify/constants";
@@ -84,7 +85,9 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           <AnnouncementBar
             messages={announcements.length ? announcements : [...siteConfig.announcements]}
           />
-          <Header />
+          <Suspense fallback={<HeaderShell />}>
+            <Header />
+          </Suspense>
           <main id="main" className="flex-1">
             {children}
           </main>
