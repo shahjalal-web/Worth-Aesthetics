@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { Money } from "@/lib/shopify/types";
+import { idFromGid, track } from "@/lib/analytics/client";
 import { formatMoney } from "@/lib/utils";
 
 const KEY = "wa-recently-viewed";
@@ -26,16 +27,21 @@ function read(): Item[] {
   }
 }
 
-/** Records a product view (mounted on the PDP). */
-export function TrackRecentlyViewed({ item }: { item: Item }) {
+/** Records a product view (mounted on the PDP) and sends view_item. */
+export function TrackRecentlyViewed({ item, productId }: { item: Item; productId?: string }) {
   useEffect(() => {
+    track("view_item", {
+      currency: item.price.currencyCode,
+      value: parseFloat(item.price.amount),
+      items: [{ item_id: productId ? idFromGid(productId) : item.handle, item_name: item.title, price: parseFloat(item.price.amount) }],
+    });
     try {
       const next = [item, ...read().filter((i) => i.handle !== item.handle)].slice(0, MAX);
       localStorage.setItem(KEY, JSON.stringify(next));
     } catch {
       /* storage unavailable */
     }
-  }, [item]);
+  }, [item, productId]);
   return null;
 }
 

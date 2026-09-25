@@ -12,6 +12,7 @@ import {
   type ReactNode,
 } from "react";
 import type { Cart, CartLine, Money, ProductCardData, ProductVariant } from "@/lib/shopify/types";
+import { idFromGid, track } from "@/lib/analytics/client";
 import { addItemAction, addLinesAction, updateNoteAction, updateQuantityAction, type CartResult } from "./actions";
 
 type Op =
@@ -136,6 +137,11 @@ export function CartProvider({
   const addItem = useCallback(
     (product: ProductCardData, variant: ProductVariant, quantity = 1) => {
       setOpen(true);
+      track("add_to_cart", {
+        currency: variant.price.currencyCode,
+        value: parseFloat(variant.price.amount) * quantity,
+        items: [{ item_id: idFromGid(product.id), item_name: product.title, item_variant: variant.title, price: parseFloat(variant.price.amount), quantity }],
+      });
       startTransition(async () => {
         addPending({ type: "add", product, variant, quantity });
         handle(await addItemAction(variant.id, quantity));
@@ -148,6 +154,11 @@ export function CartProvider({
     (items: { product: ProductCardData; variant: ProductVariant; quantity?: number }[]) => {
       if (!items.length) return;
       setOpen(true);
+      track("add_to_cart", {
+        currency: items[0].variant.price.currencyCode,
+        value: items.reduce((s, i) => s + parseFloat(i.variant.price.amount) * (i.quantity ?? 1), 0),
+        items: items.map((i) => ({ item_id: idFromGid(i.product.id), item_name: i.product.title, item_variant: i.variant.title, price: parseFloat(i.variant.price.amount), quantity: i.quantity ?? 1 })),
+      });
       startTransition(async () => {
         for (const i of items) addPending({ type: "add", product: i.product, variant: i.variant, quantity: i.quantity ?? 1 });
         handle(await addLinesAction(items.map((i) => ({ merchandiseId: i.variant.id, quantity: i.quantity ?? 1 }))));

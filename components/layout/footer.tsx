@@ -3,6 +3,7 @@ import Link from "next/link";
 import { MolecularLattice } from "@/components/brand/molecular";
 import { InstagramIcon, TikTokIcon } from "@/components/ui/icons";
 import { footerNav, legalNav, siteConfig } from "@/lib/site-config";
+import { PrivacyChoicesLink } from "@/components/consent/consent-banner";
 import { NewsletterForm } from "./newsletter";
 
 export function Footer() {
@@ -58,6 +59,7 @@ export function Footer() {
                 {l.label}
               </Link>
             ))}
+            <PrivacyChoicesLink className="text-[12px] text-alabaster/60 hover:text-taupe" />
             <div className="flex items-center gap-1">
               {/* TBC: social URLs from client */}
               <a

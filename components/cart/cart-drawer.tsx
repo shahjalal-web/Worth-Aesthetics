@@ -12,6 +12,7 @@ import { Sheet } from "@/components/ui/sheet";
 import { PaymentBadges, TrustRow } from "@/components/ui/trust-row";
 import { ProductImage } from "@/components/product/product-image";
 import { Price } from "@/components/product/price";
+import { idFromGid, track } from "@/lib/analytics/client";
 import { useCart, useCartActions } from "./cart-context";
 import { FreeShippingBar } from "./free-shipping-bar";
 
@@ -103,6 +104,19 @@ function DrawerContent({ upsellPromise }: { upsellPromise: Promise<ProductCardDa
             <a
               href={cart.checkoutUrl || "#"}
               aria-disabled={!cart.checkoutUrl || isPending}
+              onClick={() =>
+                track("begin_checkout", {
+                  currency: cart.cost.subtotalAmount.currencyCode,
+                  value: parseFloat(cart.cost.subtotalAmount.amount),
+                  items: cart.lines.map((l) => ({
+                    item_id: idFromGid(l.merchandise.product.id),
+                    item_name: l.merchandise.product.title,
+                    item_variant: l.merchandise.title,
+                    price: parseFloat(l.cost.totalAmount.amount) / l.quantity,
+                    quantity: l.quantity,
+                  })),
+                })
+              }
               className={buttonClasses({
                 size: "lg",
                 className: cn("mt-4 w-full", (!cart.checkoutUrl || isPending) && "pointer-events-none opacity-60"),
