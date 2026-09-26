@@ -16,12 +16,18 @@ npx tsx scripts/screenshot.mts http://localhost:3000/ <outDir> light|dark   # vi
 ```
 
 **Next up (in order):**
-1. ⛔ **Disable the Online Store password** in Shopify — checkout currently redirects to `/password`.
-2. ⛔ **Customer Account API client ID** (Headless channel → Customer Account API) + an https URL (Vercel deploy or ngrok) → account login goes live. Code is done.
-3. ⏳ Deploy to Vercel (`docs/DEPLOY.md`), then `scripts/setup-webhooks.mts --url https://…`.
+1. ⏳ Deploy to Vercel (`docs/DEPLOY.md`) → then in Shopify Headless → Customer Account API add: callback `https://<domain>/account/authorize`, origin `https://<domain>`, logout `https://<domain>/`. Set `NEXT_PUBLIC_SITE_URL` to the https domain. Then test login → order history end-to-end.
+2. ⏳ `scripts/setup-webhooks.mts --url https://<domain>`.
+3. ⏳ Rename store "My Store" → "Worth Aesthetics" (shows on checkout); place a test order (Bogus gateway).
 4. ⏳ Search & Discovery filters for `worth.skin_concerns` / `worth.skin_types`.
-5. ⏳ Client items from `docs/OPEN_QUESTIONS.md` (logo SVG, real prices/photos, returns, Klaviyo, reviews app).
-6. ⏳ Optional: Shopify analytics via `@shopify/hydrogen-react` (`sendShopifyAnalytics`), Lighthouse pass, axe audit.
+5. ⏳ Client items in `docs/OPEN_QUESTIONS.md`.
+
+---
+
+## Session 3 — 2026-09-26
+- ✅ Customer Account client ID saved (`.env`); `/account/login` redirects correctly to Shopify OAuth. Shopify returns **redirect_uri mismatch** for localhost — needs the https domain (expected).
+- ✅ Store password removed by owner → Shopify checkout verified loading with the cart (NAD+ PDRN Serum $88).
+- ✅ Original interim logo: hexagon "peptide ring" + W drawn as a molecular chain, taupe apex node. Used in header, mobile menu, footer, favicon (`app/icon.svg`), apple icon, OG image, Organization JSON-LD (`public/brand/logo.svg`). Removed default Next favicon.
 
 ---
 

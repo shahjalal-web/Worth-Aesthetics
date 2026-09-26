@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 64" fill="none">
+  <g transform="translate(4 8)">
+    <path d="M24 2.8 42.4 13.4v21.2L24 45.2 5.6 34.6V13.4Z" stroke="#2D2B2A" stroke-width="1.1" stroke-linejoin="round"/>
+    <path d="M13.2 15.6 18.6 32.2 24 21.4l5.4 10.8 5.4-16.6" stroke="#2D2B2A" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+    <g fill="#2D2B2A"><circle cx="13.2" cy="15.6" r="1.9"/><circle cx="18.6" cy="32.2" r="1.9"/><circle cx="29.4" cy="32.2" r="1.9"/><circle cx="34.8" cy="15.6" r="1.9"/></g>
+    <circle cx="24" cy="21.4" r="2.5" fill="#B89F6B"/>
+  </g>
+  <text x="66" y="34" fill="#2D2B2A" font-family="Montserrat, Helvetica, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="7.5">WORTH</text>
+  <text x="67" y="50" fill="#6B6560" font-family="Montserrat, Helvetica, Arial, sans-serif" font-size="9" font-weight="500" letter-spacing="4.2">AESTHETICS</text>
+</svg>

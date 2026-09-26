@@ -3,7 +3,7 @@
 Items the storefront currently shows as placeholders. Nothing here should be presented as fact until confirmed.
 
 ## Brand & assets
-- [ ] **Official logo** as SVG (WA monogram roundel + wordmark). Currently a text placeholder (`components/brand/logo.tsx`).
+- [ ] **Official logo** as SVG. Currently an original interim mark (hexagon + molecular W) in `components/brand/logo.tsx`, `app/icon.svg`, `public/brand/logo.svg`.
 - [ ] **Neue Haas Grotesk web licence?** If not, we keep Inter as the substitute.
 - [ ] Final product photography (on white / alabaster, marble & travertine). Current images are mockups.
 - [ ] Social media URLs (Instagram, TikTok, Facebook) and contact email.
@@ -35,7 +35,9 @@ Items the storefront currently shows as placeholders. Nothing here should be pre
 
 ## Technical access
 - [x] ~~Install the Dev-Dashboard app~~ — done.
-- [ ] **Disable the Online Store password** so checkout works for visitors.
+- [x] ~~Disable the Online Store password~~ — done 2026-09-26; checkout verified.
 - [ ] Confirm the placeholder prices on the 4 seeded products (tag `tbc`) and upload final photography.
-- [ ] **Customer Account API** client ID + API URL (Headless channel → Customer Account API).
+- [x] ~~Customer Account API client ID~~ — received (public client, PKCE).
+- [ ] Add https callback/origin/logout URIs in Headless → Customer Account API once the domain is live (Shopify rejects localhost).
+- [ ] Rename the store from "My Store" (Settings → General) — it shows on checkout.
 - [ ] Production domain.

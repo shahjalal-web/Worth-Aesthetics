@@ -61,6 +61,6 @@ export function organizationJsonLd() {
     "@type": "Organization",
     name: siteConfig.name,
     url: absoluteUrl("/"),
-    // logo: TBC — add once the official SVG/PNG logo is provided.
+    logo: absoluteUrl("/brand/logo.svg"), // interim mark — replace with official logo when supplied
   };
 }

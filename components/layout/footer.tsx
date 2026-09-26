@@ -1,5 +1,6 @@
 import { cacheLife } from "next/cache";
 import Link from "next/link";
+import { LogoMark } from "@/components/brand/logo";
 import { MolecularLattice } from "@/components/brand/molecular";
 import { InstagramIcon, TikTokIcon } from "@/components/ui/icons";
 import { footerNav, legalNav, siteConfig } from "@/lib/site-config";
@@ -47,7 +48,10 @@ export function Footer() {
         <div className="h-px bg-alabaster/15" />
         <div className="flex flex-col gap-6 py-8 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-5">
-            <p className="font-display text-[13px] font-semibold tracking-[0.34em]">WORTH</p>
+            <p className="flex items-center gap-2.5 font-display text-[13px] font-semibold tracking-[0.34em]">
+              <LogoMark className="size-7 text-alabaster" />
+              WORTH
+            </p>
             <span className="h-4 w-px bg-alabaster/25" aria-hidden />
             <p className="text-[12px] text-alabaster/60">
               © <CopyrightYear /> {siteConfig.name}. All rights reserved.
