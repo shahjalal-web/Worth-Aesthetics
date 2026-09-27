@@ -3,6 +3,8 @@
 import { useActionState, useState } from "react";
 import { saveAddressAction, updateProfileAction, type FormState } from "@/app/account/actions";
 import { Button } from "@/components/ui/button";
+import { ChevronDownIcon } from "@/components/ui/icons";
+import { US_STATES } from "@/lib/us-states";
 import type { CustomerAddress } from "@/lib/customer/api";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +27,41 @@ function Field({ label, name, defaultValue, required, autoComplete, className, p
         {required && <span className="text-accent-ink"> *</span>}
       </span>
       <input name={name} defaultValue={defaultValue ?? ""} required={required} autoComplete={autoComplete} placeholder={placeholder} className={input} />
+    </label>
+  );
+}
+
+function Select({ label, name, defaultValue, options, required, autoComplete }: {
+  label: string;
+  name: string;
+  defaultValue?: string | null;
+  options: [value: string, label: string][];
+  required?: boolean;
+  autoComplete?: string;
+}) {
+  return (
+    <label className="block">
+      <span className="label-caps text-[10px]">
+        {label}
+        {required && <span className="text-accent-ink"> *</span>}
+      </span>
+      <span className="relative mt-2 block">
+        <select
+          name={name}
+          defaultValue={defaultValue ?? ""}
+          required={required}
+          autoComplete={autoComplete}
+          className={cn(input, "mt-0 appearance-none pr-10")}
+        >
+          {!defaultValue && <option value="" disabled>Select…</option>}
+          {options.map(([value, text]) => (
+            <option key={value} value={value}>
+              {text}
+            </option>
+          ))}
+        </select>
+        <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-4 size-4 -translate-y-1/2 text-muted" />
+      </span>
     </label>
   );
 }
@@ -75,10 +112,10 @@ export function AddressForm({ address, onDone }: { address?: CustomerAddress; on
       <Field label="Address" name="address1" defaultValue={address?.address1} required autoComplete="address-line1" className="sm:col-span-2" />
       <Field label="Apartment, suite" name="address2" defaultValue={address?.address2} autoComplete="address-line2" className="sm:col-span-2" />
       <Field label="City" name="city" defaultValue={address?.city} required autoComplete="address-level2" />
-      <Field label="State (e.g. NY)" name="zoneCode" defaultValue={address?.zoneCode} required autoComplete="address-level1" />
+      <Select label="State" name="zoneCode" defaultValue={address?.zoneCode} options={US_STATES} required autoComplete="address-level1" />
       <Field label="ZIP code" name="zip" defaultValue={address?.zip} required autoComplete="postal-code" />
-      <Field label="Country code" name="territoryCode" defaultValue={address?.territoryCode ?? "US"} required autoComplete="country" />
-      <Field label="Phone" name="phoneNumber" defaultValue={address?.phoneNumber} autoComplete="tel" className="sm:col-span-2" />
+      <Select label="Country" name="territoryCode" defaultValue="US" options={[["US", "United States"]]} required autoComplete="country" />
+      <Field label="Phone" name="phoneNumber" defaultValue={address?.phoneNumber} autoComplete="tel" placeholder="+1 212 555 0100" className="sm:col-span-2" />
       <label className="flex items-center gap-3 text-[13px] sm:col-span-2">
         <input type="checkbox" name="default" className="size-4 accent-[var(--accent)]" /> Set as default address
       </label>

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { toStateCode } from "@/lib/us-states";
 import { ADDRESS_CREATE, ADDRESS_DELETE, ADDRESS_UPDATE, CUSTOMER_UPDATE, customerFetch } from "@/lib/customer/api";
 
 export type FormState = { status: "idle" | "success" | "error"; message?: string };
@@ -32,10 +33,23 @@ const addressSchema = z.object({
   address1: z.string().trim().min(3, "Address is required").max(120),
   address2: z.string().trim().max(120).optional(),
   city: z.string().trim().min(2, "City is required").max(80),
-  zoneCode: z.string().trim().toUpperCase().min(2, "State is required").max(3),
+  zoneCode: z
+    .string({ error: "Please choose a state" })
+    .transform((v, ctx) => toStateCode(v) ?? (ctx.addIssue({ code: "custom", message: "Please choose a valid US state" }), z.NEVER)),
   zip: z.string().trim().min(3, "ZIP code is required").max(12),
-  territoryCode: z.string().trim().toUpperCase().length(2).default("US"),
-  phoneNumber: z.string().trim().max(20).optional(),
+  territoryCode: z.literal("US", { error: "We currently ship within the United States only" }).default("US"),
+  phoneNumber: z
+    .string()
+    .trim()
+    .regex(/^\+?[\d\s().-]{7,20}$/, "Please enter a valid phone number, e.g. +1 212 555 0100")
+    // Shopify expects E.164 — assume US (+1) for 10-digit numbers.
+    .transform((v) => {
+      const digits = v.replace(/\D/g, "");
+      if (v.startsWith("+")) return `+${digits}`;
+      if (digits.length === 10) return `+1${digits}`;
+      return `+${digits}`;
+    })
+    .optional(),
 });
 
 export async function saveAddressAction(_: FormState, form: FormData): Promise<FormState> {

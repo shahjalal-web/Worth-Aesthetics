@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { NextResponse, type NextRequest } from "next/server";
 import { getEndpoints, isCustomerAccountConfigured, saveAuthRequest, SCOPES } from "@/lib/customer/auth";
 import { pkceChallenge, randomString } from "@/lib/customer/session";
@@ -22,5 +23,11 @@ export async function GET(req: NextRequest) {
   url.searchParams.set("code_challenge", pkceChallenge(verifier));
   url.searchParams.set("code_challenge_method", "S256");
   url.searchParams.set("locale", "en");
+  // Pre-fill (and auto-submit) the email the shopper typed on our branded sign-in page.
+  const email = z.email().safeParse(req.nextUrl.searchParams.get("email")?.trim());
+  if (email.success) {
+    url.searchParams.set("login_hint", email.data);
+    url.searchParams.set("login_hint_mode", "submit");
+  }
   return NextResponse.redirect(url);
 }

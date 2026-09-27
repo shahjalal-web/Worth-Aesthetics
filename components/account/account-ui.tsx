@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { OrderSummary } from "@/lib/customer/api";
-import { buttonClasses } from "@/components/ui/button";
+import { SignIn } from "./sign-in";
 import { cn, formatMoney } from "@/lib/utils";
 
 export function formatOrderDate(iso: string) {
@@ -59,46 +59,17 @@ export function OrderRow({ order }: { order: OrderSummary }) {
 }
 
 export function SignInCard({ error, configured }: { error?: string; configured: boolean }) {
-  const messages: Record<string, string> = {
-    denied: "Sign-in was cancelled.",
-    state: "Your sign-in session expired. Please try again.",
-    nonce: "We couldn't verify your sign-in. Please try again.",
-    token: "Something went wrong while signing you in. Please try again.",
-  };
+  if (configured) return <SignIn error={error} />;
   return (
     <div className="mx-auto max-w-lg border border-line bg-bg p-8 text-center md:p-12">
       <p className="eyebrow text-accent-ink">Your account</p>
       <h1 className="mt-4 text-[28px] font-light tracking-[0.08em] uppercase">
-        Welcome <span className="serif-italic tracking-normal normal-case text-accent-ink">back</span>
+        Coming <span className="serif-italic tracking-normal normal-case text-accent-ink">soon</span>
       </h1>
-      {configured ? (
-        <>
-          <p className="mt-4 text-[14px] leading-relaxed text-muted">
-            Sign in with your email — we&apos;ll send a one-time code. No password needed.
-          </p>
-          {error && messages[error] && (
-            <p role="alert" className="mt-5 text-[13px] text-accent-ink">
-              {messages[error]}
-            </p>
-          )}
-          <a href="/account/login" className={buttonClasses({ size: "lg", className: "mt-8 w-full" })}>
-            Sign in / Create account
-          </a>
-          <ul className="mt-8 space-y-2 text-left text-[13px] text-muted">
-            {["Track orders and view your history", "Faster checkout with saved addresses", "Your bag follows you across devices"].map((b) => (
-              <li key={b} className="flex gap-3">
-                <span className="mt-2.5 h-px w-4 shrink-0 bg-accent" aria-hidden />
-                {b}
-              </li>
-            ))}
-          </ul>
-        </>
-      ) : (
-        <p className="mt-4 text-[14px] leading-relaxed text-muted">
-          Customer accounts are launching shortly. Your order confirmation email includes a link to track your order at any
-          time.
-        </p>
-      )}
+      <p className="mt-4 text-[14px] leading-relaxed text-muted">
+        Customer accounts are launching shortly. Your order confirmation email includes a link to track your order at any
+        time.
+      </p>
     </div>
   );
 }

@@ -33,6 +33,10 @@ npx tsx scripts/screenshot.mts http://localhost:3000/ <outDir> light|dark   # vi
 - ✅ Journal: `scripts/seed-journal.mts` → 6 educational articles (tag `demo`).
 - ✅ Policies: interim summaries (`content/policy-fallbacks.ts`) for shipping / refund / terms when Shopify's policy is empty — Shopify text wins automatically.
 - ✅ Home: added "New from the lab" and "Curated pairings" (sets) rails.
+- ✅ Address form bug ("Too big: expected string to have <=3 characters" when typing a full state name) → US state `<select>` (`lib/us-states.ts`), server accepts code or name, phone normalised to E.164, country fixed to US.
+- ✅ Branded sign-in / create-account page (`components/account/sign-in.tsx`): split layout, tabs, email forwarded as `login_hint` + `login_hint_mode=submit`, "Continue with Shop".
+- ℹ️ Login methods: Customer Account API (required by CLAUDE.md) offers only email one-time code + Shop. Email+password needs *legacy* accounts (deprecated by Shopify); Google/phone need a third-party app + custom auth — awaiting owner decision.
+- ℹ️ Login cannot work on http://localhost (Shopify only accepts https callbacks) — test on Vercel or via an https tunnel.
 
 ---
 
