@@ -15,7 +15,7 @@ export function NewsletterForm({ tone = "dark" }: { tone?: "dark" | "light" }) {
       <div
         className={cn(
           "flex items-center border-b transition-colors focus-within:border-accent",
-          tone === "dark" ? "border-alabaster/30" : "border-line-strong",
+          tone === "dark" ? "border-band-fg/30" : "border-line-strong",
         )}
       >
         <label htmlFor={`nl-email-${tone}`} className="sr-only">
@@ -30,7 +30,7 @@ export function NewsletterForm({ tone = "dark" }: { tone?: "dark" | "light" }) {
           placeholder="Your email address"
           className={cn(
             "h-12 flex-1 bg-transparent text-[14px] outline-none",
-            tone === "dark" ? "placeholder:text-alabaster/50" : "placeholder:text-muted",
+            tone === "dark" ? "placeholder:text-band-muted" : "placeholder:text-muted",
           )}
           aria-invalid={state.status === "error"}
           aria-describedby={`nl-msg-${tone}`}
@@ -48,7 +48,7 @@ export function NewsletterForm({ tone = "dark" }: { tone?: "dark" | "light" }) {
         aria-live="polite"
         className={cn(
           "mt-3 min-h-5 text-[12px]",
-          state.status === "error" ? "text-accent" : tone === "dark" ? "text-alabaster/60" : "text-muted",
+          state.status === "error" ? "text-accent" : tone === "dark" ? "text-band-muted" : "text-muted",
         )}
       >
         {state.message ??

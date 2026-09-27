@@ -54,7 +54,7 @@ export function PageHero({
     <section
       className={cn(
         "relative overflow-hidden border-b",
-        dark ? "border-transparent bg-charcoal text-alabaster dark:bg-[#0e0d0c]" : "border-line bg-bg-soft",
+        dark ? "border-transparent bg-band text-band-fg" : "border-line bg-bg-soft",
       )}
     >
       <MolecularLattice
@@ -71,11 +71,11 @@ export function PageHero({
       >
         <div className={cn(!image && "mx-auto max-w-3xl")}>
           {crumbs && (
-            <div className={cn("mb-8", !image && "flex justify-center", dark && "[&_*]:text-alabaster/60 [&_[aria-current]]:text-alabaster")}>
+            <div className={cn("mb-8", !image && "flex justify-center", dark && "[&_*]:text-band-muted [&_[aria-current]]:text-band-fg")}>
               <Breadcrumbs items={crumbs} />
             </div>
           )}
-          {eyebrow && <p className={cn("eyebrow animate-fade-up", dark ? "text-taupe" : "text-accent-ink")}>{eyebrow}</p>}
+          {eyebrow && <p className={cn("eyebrow animate-fade-up", dark ? "text-band-accent" : "text-accent-ink")}>{eyebrow}</p>}
           <h1
             className="animate-fade-up mt-5 text-[34px] leading-[1.1] font-light tracking-[0.06em] uppercase md:text-[52px]"
             style={{ animationDelay: "80ms" }}
@@ -85,7 +85,7 @@ export function PageHero({
               <span
                 className={cn(
                   "serif-italic block pt-1 tracking-normal normal-case",
-                  dark ? "text-taupe" : "text-accent-ink",
+                  dark ? "text-band-accent" : "text-accent-ink",
                 )}
               >
                 {accent}
@@ -96,7 +96,7 @@ export function PageHero({
             <div
               className={cn(
                 "animate-fade-up mt-6 text-[15px] leading-relaxed md:text-base",
-                dark ? "text-alabaster/70" : "text-muted",
+                dark ? "text-band-muted" : "text-muted",
                 !image && "mx-auto max-w-xl",
               )}
               style={{ animationDelay: "160ms" }}

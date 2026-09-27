@@ -21,9 +21,11 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [slides, bestsellersCollection, allProducts, testimonials, articles] = await Promise.all([
+  const [slides, bestsellersCollection, newCollection, setsCollection, allProducts, testimonials, articles] = await Promise.all([
     getHeroSlides(),
     getCollectionProducts({ handle: "bestsellers", first: 4 }),
+    getCollectionProducts({ handle: "new", first: 4 }),
+    getCollectionProducts({ handle: "sets", first: 4 }),
     getProducts({ sortKey: "BEST_SELLING", first: 8 }),
     getTestimonials(),
     getLatestArticles(3),
@@ -45,8 +47,14 @@ export default async function HomePage() {
       <ScienceBand />
       <FeaturedSplit product={featured} />
       <IngredientSpotlight />
+      {newCollection.products.length > 0 && (
+        <ProductRail eyebrow="Just Arrived" title="New" accent="from the lab" products={newCollection.products} href="/collections/new" />
+      )}
       <QuizCta />
       <RitualSteps />
+      {setsCollection.products.length > 0 && (
+        <ProductRail eyebrow="Sets & Rituals" title="Curated" accent="pairings" products={setsCollection.products} href="/collections/sets" />
+      )}
       <Testimonials items={testimonials} />
       <EditorialBanner />
       <JournalRail articles={articles} />

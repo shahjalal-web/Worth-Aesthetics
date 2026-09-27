@@ -15,21 +15,28 @@
 
   /* Semantic tokens — light (default) */
   --bg: #ffffff;
-  --bg-soft: #f8f5f0;
-  --surface: #efe9e0;
+  --bg-soft: #fbf9f5;
+  --surface: #f5f0e8;
   --fg: #2d2b2a;
   --fg-muted: #6b6560; /* 5.7:1 on white, 4.8:1 on alabaster */
-  --line: #e3dace;
-  --line-strong: #cdbf9f;
-  --accent: #b89f6b; /* hairlines, icons, large display text */
+  --line: #ebe4d9;
+  --line-strong: #d6c8a8;
+  --accent: #c2a874; /* hairlines, icons, large display text */
   --accent-ink: #7a653b; /* taupe for small text: 5.5:1 white, 4.6:1 alabaster */
-  --btn-bg: #2d2b2a;
-  --btn-fg: #ffffff;
-  --btn-bg-hover: #45413e;
+  --btn-bg: #c9b084; /* bright champagne — charcoal text 6.7:1 */
+  --btn-fg: #2d2b2a;
+  --btn-bg-hover: #bea26f;
   --btn-alt-bg: #b89f6b; /* taupe button uses charcoal text (5.5:1) */
   --btn-alt-fg: #2d2b2a;
-  --overlay: rgb(29 27 26 / 0.45);
-  --shadow: 0 24px 60px -30px rgb(45 43 42 / 0.28);
+  --overlay: rgb(29 27 26 / 0.35);
+  --shadow: 0 24px 60px -30px rgb(45 43 42 / 0.22);
+  /* Feature bands (science, footer, announcement) — bright champagne in light mode */
+  --band: #f6f0e5;
+  --band-fg: #2d2b2a;
+  --band-muted: #5c5650; /* 6.3:1 on band */
+  --band-line: rgb(122 101 59 / 0.2);
+  --band-accent: #7a653b; /* 4.9:1 on band */
+  --band-deep: #efe6d6;
   color-scheme: light;
 }
 
@@ -49,6 +56,12 @@
   --btn-alt-bg: #c9b488;
   --btn-alt-fg: #141312;
   --overlay: rgb(0 0 0 / 0.6);
+  --band: #0e0d0c;
+  --band-fg: #efe9e0;
+  --band-muted: rgb(239 233 224 / 0.7);
+  --band-line: rgb(239 233 224 / 0.14);
+  --band-accent: #c9b488;
+  --band-deep: #0c0b0b;
   --shadow: 0 24px 60px -30px rgb(0 0 0 / 0.7);
   color-scheme: dark;
 }
@@ -68,6 +81,12 @@
   --color-btn-hover: var(--btn-bg-hover);
   --color-btn-alt: var(--btn-alt-bg);
   --color-btn-alt-fg: var(--btn-alt-fg);
+  --color-band: var(--band);
+  --color-band-fg: var(--band-fg);
+  --color-band-muted: var(--band-muted);
+  --color-band-line: var(--band-line);
+  --color-band-accent: var(--band-accent);
+  --color-band-deep: var(--band-deep);
 
   --color-taupe: var(--wa-taupe);
   --color-charcoal: var(--wa-charcoal);

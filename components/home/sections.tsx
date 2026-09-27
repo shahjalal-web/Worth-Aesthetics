@@ -169,28 +169,28 @@ export function ScienceBand() {
     },
   ];
   return (
-    <section className="relative overflow-hidden bg-charcoal py-24 text-alabaster md:py-32 dark:bg-[#0e0d0c]">
+    <section className="relative overflow-hidden bg-band py-24 text-band-fg md:py-32">
       <MolecularLattice className="pointer-events-none absolute top-10 -left-24 w-[520px] opacity-[0.14]" />
       <MolecularLattice className="pointer-events-none absolute -right-20 -bottom-24 w-[420px] rotate-180 opacity-[0.1]" />
       <div className="container-wa relative">
         <Reveal className="mx-auto max-w-3xl text-center">
-          <p className="eyebrow text-taupe">The Science</p>
+          <p className="eyebrow text-band-accent">The Science</p>
           <h2 className="mt-5 text-[28px] leading-[1.2] font-light tracking-[0.06em] uppercase md:text-[40px]">
-            Biochemistry, <span className="serif-italic tracking-normal normal-case text-taupe">refined</span>
+            Biochemistry, <span className="serif-italic tracking-normal normal-case text-band-accent">refined</span>
           </h2>
-          <p className="mx-auto mt-6 max-w-xl text-[15px] leading-relaxed text-alabaster/70">
+          <p className="mx-auto mt-6 max-w-xl text-[15px] leading-relaxed text-band-muted">
             Every Worth Aesthetics formula is built around multi-peptide chains and biomimetic
             complexes — chosen for how they help skin look, and feel, its most composed.
           </p>
         </Reveal>
 
-        <ol className="mt-16 grid gap-px bg-alabaster/12 md:mt-20 md:grid-cols-3">
+        <ol className="mt-16 grid gap-px bg-band-line md:mt-20 md:grid-cols-3">
           {pillars.map((p, i) => (
-            <Reveal as="li" key={p.n} delay={i * 120} className="bg-charcoal p-8 md:p-10 dark:bg-[#0e0d0c]">
-              <span className="font-display text-[11px] tracking-[0.3em] text-taupe">{p.n}</span>
+            <Reveal as="li" key={p.n} delay={i * 120} className="bg-band p-8 md:p-10">
+              <span className="font-display text-[11px] tracking-[0.3em] text-band-accent">{p.n}</span>
               <h3 className="mt-8 text-lg font-light tracking-[0.1em] uppercase">{p.title}</h3>
-              <p className="serif-italic mt-1 text-lg text-taupe">{p.sub}</p>
-              <p className="mt-5 text-[14px] leading-relaxed text-alabaster/70">{p.text}</p>
+              <p className="serif-italic mt-1 text-lg text-band-accent">{p.sub}</p>
+              <p className="mt-5 text-[14px] leading-relaxed text-band-muted">{p.text}</p>
             </Reveal>
           ))}
         </ol>
@@ -198,7 +198,7 @@ export function ScienceBand() {
         <div className="mt-14 flex justify-center">
           <Link
             href="/pages/science"
-            className="label-caps group inline-flex items-center gap-3 border border-alabaster/40 px-8 py-4 text-[10.5px] transition-colors hover:border-taupe hover:bg-taupe hover:text-charcoal"
+            className="label-caps group inline-flex items-center gap-3 border border-band-fg/40 px-8 py-4 text-[10.5px] transition-colors hover:border-btn hover:bg-btn hover:text-btn-fg"
           >
             Explore our peptides
             <ArrowRightIcon className="size-4 transition-transform duration-300 group-hover:translate-x-1" />

@@ -40,4 +40,6 @@ Items the storefront currently shows as placeholders. Nothing here should be pre
 - [x] ~~Customer Account API client ID~~ — received (public client, PKCE).
 - [ ] Add https callback/origin/logout URIs in Headless → Customer Account API once the domain is live (Shopify rejects localhost).
 - [ ] Rename the store from "My Store" (Settings → General) — it shows on checkout.
-- [ ] Production domain.
+- [ ] Production domain (currently https://worth-aesthetics.vercel.app).
+- [ ] **Demo catalogue:** 16 placeholder products (tag `demo`) + 6 Journal articles (tag `demo`) were added so the site isn't empty. Archive/replace them once the real range, prices and photography are final (Products → filter by tag `demo` → Archive).
+- [ ] Policies: create Refund / Shipping / Terms in Settings → Policies (interim summaries are shown until then). Confirm dispatch cut-off and returns window.

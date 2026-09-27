@@ -190,12 +190,12 @@ function PromoTile() {
     <li className="col-span-2 md:col-span-1">
       <Link
         href="/pages/routine"
-        className="group relative flex h-full min-h-72 flex-col justify-end overflow-hidden bg-charcoal p-8 text-alabaster dark:bg-[#0e0d0c]"
+        className="group relative flex h-full min-h-72 flex-col justify-end overflow-hidden bg-band p-8 text-band-fg"
       >
         <MolecularLattice className="pointer-events-none absolute -top-8 -right-8 w-56 opacity-20 transition-transform duration-700 group-hover:scale-105" />
-        <p className="eyebrow relative text-taupe">Build your routine</p>
+        <p className="eyebrow relative text-band-accent">Build your routine</p>
         <p className="serif-italic relative mt-3 text-3xl leading-tight">Not sure where to begin?</p>
-        <span className="label-caps relative mt-6 text-[10px] underline decoration-taupe underline-offset-[6px]">Take the quiz</span>
+        <span className="label-caps relative mt-6 text-[10px] underline decoration-band-accent underline-offset-[6px]">Take the quiz</span>
       </Link>
     </li>
   );

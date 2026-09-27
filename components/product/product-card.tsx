@@ -35,7 +35,7 @@ export function ProductCard({
   const hover = second && second.url !== primary?.url ? second : null;
 
   return (
-    <article className={cn("group relative flex flex-col", className)}>
+    <article className={cn("group relative flex h-full flex-col", className)}>
       <Link href={href} className="relative block aspect-[4/5] overflow-hidden bg-surface" aria-label={product.title}>
         <ProductBadge product={product} />
         <ProductImage
@@ -58,20 +58,21 @@ export function ProductCard({
         )}
       </Link>
 
+      {/* Fixed-height text slots so every card in a row lines up, whatever the copy length */}
       <div className="flex flex-1 flex-col pt-4 text-center md:pt-5">
-        <h3 className="title-caps text-[12px] leading-snug md:text-[13px]">
+        <h3 className="title-caps line-clamp-2 min-h-[2.75em] text-[12px] leading-[1.375] md:text-[13px]">
           <Link href={href} className="transition-colors hover:text-accent-ink">
             {product.title}
           </Link>
         </h3>
-        {product.meta.activeComplex && (
-          <p className="serif-italic mt-1.5 text-[15px] leading-snug text-muted md:text-base">
-            {product.meta.activeComplex}
-          </p>
-        )}
-        {!product.meta.activeComplex && product.meta.subtitle && (
-          <p className="mt-1.5 text-[12.5px] text-muted">{product.meta.subtitle}</p>
-        )}
+        <p
+          className={cn(
+            "mt-1 line-clamp-2 min-h-[2.5em] leading-[1.25] text-muted",
+            product.meta.activeComplex ? "serif-italic text-[15px] md:text-base" : "text-[12.5px]",
+          )}
+        >
+          {product.meta.activeComplex || product.meta.subtitle}
+        </p>
         <CardPurchase product={product} />
       </div>
     </article>
@@ -84,6 +85,7 @@ export function ProductCardSkeleton() {
       <div className="aspect-[4/5] animate-pulse bg-surface" />
       <div className="mx-auto mt-5 h-3 w-3/4 animate-pulse bg-surface" />
       <div className="mx-auto mt-2 h-3 w-1/2 animate-pulse bg-surface" />
+      <div className="mx-auto mt-6 h-3 w-1/4 animate-pulse bg-surface" />
       <div className="mt-5 h-11 animate-pulse bg-surface" />
     </div>
   );

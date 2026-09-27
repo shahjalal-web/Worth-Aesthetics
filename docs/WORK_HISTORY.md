@@ -16,11 +16,23 @@ npx tsx scripts/screenshot.mts http://localhost:3000/ <outDir> light|dark   # vi
 ```
 
 **Next up (in order):**
-1. ⏳ Deploy to Vercel (`docs/DEPLOY.md`) → then in Shopify Headless → Customer Account API add: callback `https://<domain>/account/authorize`, origin `https://<domain>`, logout `https://<domain>/`. Set `NEXT_PUBLIC_SITE_URL` to the https domain. Then test login → order history end-to-end.
-2. ⏳ `scripts/setup-webhooks.mts --url https://<domain>`.
-3. ⏳ Rename store "My Store" → "Worth Aesthetics" (shows on checkout); place a test order (Bogus gateway).
-4. ⏳ Search & Discovery filters for `worth.skin_concerns` / `worth.skin_types`.
-5. ⏳ Client items in `docs/OPEN_QUESTIONS.md`.
+1. ⏳ Owner: Shopify admin → Sales channels → Headless → storefront → Customer Account API → Application setup: callback `https://worth-aesthetics.vercel.app/account/authorize`, JavaScript origin `https://worth-aesthetics.vercel.app`, logout `https://worth-aesthetics.vercel.app/`. Vercel env `NEXT_PUBLIC_SITE_URL=https://worth-aesthetics.vercel.app` → redeploy. Then test login → order history.
+2. ⏳ `scripts/setup-webhooks.mts --url https://worth-aesthetics.vercel.app` (needs owner OK — live store).
+3. ⏳ Owner: Settings → Policies → "Create from template" for Refund / Shipping / Terms (interim summaries show until then).
+4. ⏳ Rename store "My Store" → "Worth Aesthetics" (shows on checkout); place a test order (Bogus gateway).
+5. ⏳ Search & Discovery filters for `worth.skin_concerns` / `worth.skin_types`.
+6. ⏳ Client items in `docs/OPEN_QUESTIONS.md`.
+
+---
+
+## Session 4 — 2026-09-27
+- ✅ Deployed on Vercel: **https://worth-aesthetics.vercel.app** (repo remote `myrepo` → github.com/shahjalal-web/Worth-Aesthetics, branch `main`). Login gives *redirect_uri mismatch* until the owner adds the callback URIs (see Next up #1) — code already sends the correct https URI.
+- ✅ Brighter palette (owner found it too deep): new `--band*` tokens — announcement bar, science band, footer, dark page heroes, promo tile are now bright champagne in light mode (dark mode unchanged). Primary buttons = champagne `#C9B084` with charcoal text (6.7:1). Lighter surface/line tokens.
+- ✅ Product cards equal height: `h-full` on the card + fixed-height slots (title 2 lines, subline 2 lines, size/pill row, price).
+- ✅ Demo catalogue (owner-requested): `scripts/demo-catalog.mts` + `seed-demo-products.mts` → **16 products** tagged `demo` + `tbc` (serums, creams, cleanser, 4 sets with compare-at, 3 accessories; multi-size variants). Packshots rendered by `scripts/generate-placeholder-images.mts` (SVG → JPEG, local copies git-ignored). Every collection now has products.
+- ✅ Journal: `scripts/seed-journal.mts` → 6 educational articles (tag `demo`).
+- ✅ Policies: interim summaries (`content/policy-fallbacks.ts`) for shipping / refund / terms when Shopify's policy is empty — Shopify text wins automatically.
+- ✅ Home: added "New from the lab" and "Curated pairings" (sets) rails.
 
 ---
 

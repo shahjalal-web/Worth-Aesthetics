@@ -17,7 +17,7 @@ export function AnnouncementBar({ messages }: { messages: string[] }) {
   if (!messages.length) return null;
 
   return (
-    <div className="bg-charcoal text-alabaster dark:bg-[#0c0b0b]">
+    <div className="border-b border-band-line bg-band-deep text-band-fg">
       <div className="container-wa relative flex h-9 items-center justify-center overflow-hidden">
         {messages.map((m, i) => (
           <p

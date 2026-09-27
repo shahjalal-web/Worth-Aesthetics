@@ -1,4 +1,5 @@
 import "server-only";
+import { fallbackPolicies } from "@/content/policy-fallbacks";
 import { cacheLife, cacheTag } from "next/cache";
 import { isShopifyConfigured, shopifyFetch } from "./client";
 import { HIDDEN_PRODUCT_TAG, TAGS } from "./constants";
@@ -510,13 +511,15 @@ export async function getPolicies(): Promise<Policy[]> {
   "use cache";
   cacheTag(TAGS.content, "policies");
   cacheLife("days");
-  if (!isShopifyConfigured()) return [];
+  if (!isShopifyConfigured()) return fallbackPolicies;
   const data = await shopifyFetch<{ shop: Record<string, Policy | null | string> }>({
     query: getShopPoliciesQuery,
   });
-  return ["privacyPolicy", "refundPolicy", "shippingPolicy", "termsOfService"]
+  const published = ["privacyPolicy", "refundPolicy", "shippingPolicy", "termsOfService"]
     .map((k) => data.shop[k] as Policy | null)
-    .filter((p): p is Policy => Boolean(p));
+    .filter((p): p is Policy => Boolean(p?.body));
+  // Interim summaries fill any policy not yet written in Shopify admin; Shopify's text always wins.
+  return [...published, ...fallbackPolicies.filter((f) => !published.some((p) => p.handle === f.handle))];
 }
 
 /* ------------------------------------------------------------------ */

@@ -90,9 +90,9 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-charcoal py-20 text-center text-alabaster md:py-24 dark:bg-[#0e0d0c]">
+      <section className="relative overflow-hidden bg-band py-20 text-center text-band-fg md:py-24">
         <Reveal className="container-wa">
-          <p className="eyebrow text-taupe">The collection</p>
+          <p className="eyebrow text-band-accent">The collection</p>
           <p className="serif-italic mt-5 text-3xl md:text-4xl">Begin your ritual</p>
           <div className="mt-9 flex justify-center">
             <ButtonLink href="/collections/shop-all" variant="accent">

@@ -43,3 +43,4 @@ next-env.d.ts
 
 # client-supplied source files (confidential)
 /client update/
+/public/placeholder/demo/

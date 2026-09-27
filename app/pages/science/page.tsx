@@ -117,20 +117,20 @@ export default async function SciencePage() {
       </section>
 
       {/* Formulation principles */}
-      <section className="relative overflow-hidden bg-charcoal py-20 text-alabaster md:py-28 dark:bg-[#0e0d0c]">
+      <section className="relative overflow-hidden bg-band py-20 text-band-fg md:py-28">
         <MolecularLattice className="pointer-events-none absolute -right-20 -bottom-24 w-[420px] rotate-180 opacity-[0.1]" />
         <div className="container-wa relative grid gap-14 lg:grid-cols-12">
           <Reveal className="lg:col-span-4">
-            <p className="eyebrow text-taupe">How we formulate</p>
+            <p className="eyebrow text-band-accent">How we formulate</p>
             <h2 className="mt-5 text-[28px] leading-[1.15] font-light tracking-[0.06em] uppercase md:text-[36px]">
-              Our <span className="serif-italic tracking-normal normal-case text-taupe">principles</span>
+              Our <span className="serif-italic tracking-normal normal-case text-band-accent">principles</span>
             </h2>
           </Reveal>
           <ul className="grid gap-10 sm:grid-cols-2 lg:col-span-7 lg:col-start-6">
             {formulationPrinciples.map((p, i) => (
-              <Reveal as="li" key={p.title} delay={i * 90} className="border-t border-alabaster/20 pt-6">
+              <Reveal as="li" key={p.title} delay={i * 90} className="border-t border-band-line pt-6">
                 <h3 className="label-caps">{p.title}</h3>
-                <p className="mt-3 text-[14px] leading-relaxed text-alabaster/70">{p.text}</p>
+                <p className="mt-3 text-[14px] leading-relaxed text-band-muted">{p.text}</p>
               </Reveal>
             ))}
           </ul>
