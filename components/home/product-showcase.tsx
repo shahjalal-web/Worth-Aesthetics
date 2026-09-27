@@ -51,31 +51,31 @@ export function ProductShowcase({ tabs }: { tabs: ShowcaseTab[] }) {
                 )}
               >
                 {t.label}
-                <span className="ml-2 opacity-60">{t.products.length}</span>
+                <span className="ml-2">{t.products.length}</span>
               </button>
             ))}
           </div>
         </div>
 
         <div className="relative mt-10 md:mt-12">
-          <ul
-            key={tab.id}
-            ref={track}
-            role="tabpanel"
-            aria-label={tab.label}
-            onScroll={(e) => {
-              const el = e.currentTarget;
-              const max = el.scrollWidth - el.clientWidth;
-              setProgress(max > 0 ? el.scrollLeft / max : 1);
-            }}
-            className="animate-fade no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-5 md:mx-0 md:gap-6 md:px-0 lg:gap-8"
-          >
-            {tab.products.map((p, i) => (
-              <li key={p.id} className="w-[68vw] shrink-0 snap-start sm:w-[42vw] md:w-[calc((100%-3rem)/3)] lg:w-[calc((100%-6rem)/4)]">
-                <ProductCard product={p} priority={i < 2} />
-              </li>
-            ))}
-          </ul>
+          <div role="tabpanel" aria-label={tab.label}>
+            <ul
+              key={tab.id}
+              ref={track}
+              onScroll={(e) => {
+                const el = e.currentTarget;
+                const max = el.scrollWidth - el.clientWidth;
+                setProgress(max > 0 ? el.scrollLeft / max : 1);
+              }}
+              className="animate-fade no-scrollbar -mx-5 flex snap-x scroll-px-5 md:scroll-px-0 snap-mandatory gap-4 overflow-x-auto scroll-smooth px-5 md:mx-0 md:gap-6 md:px-0 lg:gap-8"
+            >
+              {tab.products.map((p, i) => (
+                <li key={p.id} className="w-[68vw] shrink-0 snap-start sm:w-[42vw] md:w-[calc((100%-3rem)/3)] lg:w-[calc((100%-6rem)/4)]">
+                  <ProductCard product={p} priority={i < 2} />
+                </li>
+              ))}
+            </ul>
+          </div>
 
           <button
             type="button"

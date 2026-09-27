@@ -222,7 +222,7 @@ function Upsell({ upsellPromise, cart }: { upsellPromise: Promise<ProductCardDat
       <h3 id="upsell-title" className="serif-italic px-5 text-[17px]">
         Pairs well with
       </h3>
-      <ul className="no-scrollbar mt-3 flex snap-x gap-3 overflow-x-auto px-5 pb-1">
+      <ul className="no-scrollbar mt-3 flex snap-x scroll-px-5 gap-3 overflow-x-auto px-5 pb-1">
         {recs.map(({ product: p, reason }) => {
           const variant = p.variants.find((v) => v.availableForSale) ?? p.variants[0];
           return (

@@ -18,6 +18,14 @@ if (!base?.startsWith("https://")) {
 }
 const callbackUrl = `${base.replace(/\/$/, "")}/api/revalidate`;
 
+// Metaobject topics require a filter naming the types to watch (storefront content types only).
+const CONTENT_FILTER = ["ingredient", "faq_item", "hero_slide", "announcement", "testimonial"].map((t) => `type:${t}`).join(" OR ");
+const FILTERS: Record<string, string> = {
+  METAOBJECTS_CREATE: CONTENT_FILTER,
+  METAOBJECTS_UPDATE: CONTENT_FILTER,
+  METAOBJECTS_DELETE: CONTENT_FILTER,
+};
+
 const TOPICS = [
   "PRODUCTS_CREATE",
   "PRODUCTS_UPDATE",
@@ -26,6 +34,11 @@ const TOPICS = [
   "COLLECTIONS_UPDATE",
   "COLLECTIONS_DELETE",
   "INVENTORY_LEVELS_UPDATE",
+  // Content: FAQ / ingredients / announcements / hero slides / testimonials (metaobjects) and shop settings.
+  "METAOBJECTS_CREATE",
+  "METAOBJECTS_UPDATE",
+  "METAOBJECTS_DELETE",
+  "SHOP_UPDATE",
 ];
 
 console.log(`\nWebhooks → ${callbackUrl} ${DRY_RUN ? "(DRY RUN)" : ""}\n`);
@@ -47,7 +60,7 @@ try {
           userErrors { field message }
         }
       }`,
-      { topic, sub: { uri: callbackUrl, format: "JSON" } },
+      { topic, sub: { uri: callbackUrl, format: "JSON", ...(FILTERS[topic] ? { filter: FILTERS[topic] } : {}) } },
     );
     check(res.webhookSubscriptionCreate, topic);
   }

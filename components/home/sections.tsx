@@ -74,7 +74,7 @@ export function ProductRail({
             }
           />
         </Reveal>
-        <ul className="no-scrollbar -mx-5 mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 md:mx-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0 lg:grid-cols-4 lg:gap-8">
+        <ul className="no-scrollbar -mx-5 mt-12 flex snap-x scroll-px-5 md:scroll-px-0 snap-mandatory gap-4 overflow-x-auto px-5 md:mx-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0 lg:grid-cols-4 lg:gap-8">
           {products.slice(0, 4).map((p, i) => (
             <Reveal as="li" key={p.id} delay={i * 80} className="w-[68vw] shrink-0 snap-start sm:w-[44vw] md:w-auto">
               <ProductCard product={p} />
@@ -108,7 +108,7 @@ export function ComingSoonRail() {
             description="Our debut collection arrives shortly. Join the Worth Letter for first access."
           />
         </Reveal>
-        <ul className="no-scrollbar -mx-5 mt-14 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 md:mx-0 md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 lg:grid-cols-4 lg:gap-8">
+        <ul className="no-scrollbar -mx-5 mt-14 flex snap-x scroll-px-5 md:scroll-px-0 snap-mandatory gap-4 overflow-x-auto px-5 md:mx-0 md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 lg:grid-cols-4 lg:gap-8">
           {items.map((item, i) => (
             <Reveal as="li" key={item.title} delay={i * 80} className="group w-[68vw] shrink-0 snap-start sm:w-[44vw] md:w-auto">
               <div className={item.fit === "contain" ? "relative aspect-[4/5] overflow-hidden bg-white" : "relative aspect-[4/5] overflow-hidden bg-surface"}>

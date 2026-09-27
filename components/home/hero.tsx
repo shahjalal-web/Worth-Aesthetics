@@ -78,7 +78,7 @@ export function Hero({ slide }: { slide?: HeroSlide }) {
               fill
               priority
               sizes="(min-width: 1024px) 45vw, 92vw"
-              className="animate-slow-zoom object-cover"
+              className="object-cover"
             />
             <div className="pointer-events-none absolute inset-4 border border-white/40" aria-hidden />
           </div>

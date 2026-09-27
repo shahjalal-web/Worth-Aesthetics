@@ -72,7 +72,7 @@ export function Testimonials({ items }: { items: Testimonial[] }) {
         <Reveal>
           <SectionHeading eyebrow="In their words" title="Kind" accent="words" />
         </Reveal>
-        <ul className="no-scrollbar -mx-5 mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 md:mx-0 md:grid md:grid-cols-3 md:px-0">
+        <ul className="no-scrollbar -mx-5 mt-14 flex snap-x scroll-px-5 md:scroll-px-0 snap-mandatory gap-5 overflow-x-auto px-5 md:mx-0 md:grid md:grid-cols-3 md:px-0">
           {items.slice(0, 6).map((t, i) => (
             <Reveal as="li" key={t.id} delay={i * 90} className="w-[80vw] shrink-0 snap-start border border-line bg-bg p-8 md:w-auto">
               <p className="serif-italic text-5xl leading-none text-accent" aria-hidden>

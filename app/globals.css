@@ -209,22 +209,11 @@
     opacity: 1;
   }
 }
-@keyframes wa-slow-zoom {
-  from {
-    transform: scale(1.06);
-  }
-  to {
-    transform: scale(1);
-  }
-}
 @utility animate-fade-up {
   animation: wa-fade-up 700ms var(--ease-luxe) both;
 }
 @utility animate-fade {
   animation: wa-fade 500ms var(--ease-luxe) both;
-}
-@utility animate-slow-zoom {
-  animation: wa-slow-zoom 2400ms var(--ease-luxe) both;
 }
 
 @media (prefers-reduced-motion: reduce) {

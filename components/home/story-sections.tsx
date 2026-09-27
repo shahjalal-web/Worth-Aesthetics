@@ -21,7 +21,7 @@ export function ShopByConcern({ tiles }: { tiles: ConcernTile[] }) {
             What does your skin <span className="serif-italic tracking-normal normal-case text-accent-ink">ask for?</span>
           </h2>
         </Reveal>
-        <ul className="no-scrollbar -mx-5 mt-12 flex snap-x gap-4 overflow-x-auto px-5 md:mx-0 md:grid md:grid-cols-5 md:gap-5 md:px-0">
+        <ul className="no-scrollbar -mx-5 mt-12 flex snap-x scroll-px-5 md:scroll-px-0 gap-4 overflow-x-auto px-5 md:mx-0 md:grid md:grid-cols-5 md:gap-5 md:px-0">
           {shown.map((t, i) => (
             <Reveal as="li" key={t.handle} delay={i * 70} className="w-[58vw] shrink-0 snap-start sm:w-[36vw] md:w-auto">
               <Link href={`/collections/${t.handle}`} className="group block">

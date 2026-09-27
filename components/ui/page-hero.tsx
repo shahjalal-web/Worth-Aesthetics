@@ -108,7 +108,7 @@ export function PageHero({
         </div>
         {image && (
           <div className="relative aspect-[4/3] overflow-hidden bg-surface lg:aspect-[5/4]">
-            <Image src={image} alt={imageAlt} fill priority sizes="(min-width: 1024px) 48vw, 92vw" className="animate-slow-zoom object-cover" />
+            <Image src={image} alt={imageAlt} fill priority sizes="(min-width: 1024px) 48vw, 92vw" className="object-cover" />
             <div className="pointer-events-none absolute inset-4 border border-white/40" aria-hidden />
           </div>
         )}

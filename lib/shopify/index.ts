@@ -461,7 +461,7 @@ export async function getTestimonials(): Promise<Testimonial[]> {
 export async function getBlog(handle: string): Promise<Blog | undefined> {
   "use cache";
   cacheTag(TAGS.content, `blog:${handle}`);
-  cacheLife("days");
+  cacheLife("hours") // no Shopify webhook exists for blogs/pages/policies;
   if (!isShopifyConfigured()) return undefined;
   const data = await shopifyFetch<{ blog: (Omit<Blog, "articles"> & { articles: Nodes<ArticleCard> }) | null }>({
     query: getBlogQuery,
@@ -474,7 +474,7 @@ export async function getBlog(handle: string): Promise<Blog | undefined> {
 export async function getLatestArticles(first = 3): Promise<ArticleCard[]> {
   "use cache";
   cacheTag(TAGS.content, "articles");
-  cacheLife("days");
+  cacheLife("hours") // no Shopify webhook exists for blogs/pages/policies;
   if (!isShopifyConfigured()) return [];
   const data = await shopifyFetch<{ articles: Nodes<ArticleCard> }>({ query: getLatestArticlesQuery, variables: { first } });
   return data.articles.nodes;
@@ -483,7 +483,7 @@ export async function getLatestArticles(first = 3): Promise<ArticleCard[]> {
 export async function getArticle(blog: string, handle: string): Promise<Article | undefined> {
   "use cache";
   cacheTag(TAGS.content, `article:${blog}/${handle}`);
-  cacheLife("days");
+  cacheLife("hours") // no Shopify webhook exists for blogs/pages/policies;
   if (!isShopifyConfigured()) return undefined;
   const data = await shopifyFetch<{ blog: { articleByHandle: Article | null } | null }>({
     query: getArticleQuery,
@@ -495,7 +495,7 @@ export async function getArticle(blog: string, handle: string): Promise<Article 
 export async function getArticlePaths(): Promise<{ blog: string; handle: string; publishedAt: string }[]> {
   "use cache";
   cacheTag(TAGS.content, "articles");
-  cacheLife("days");
+  cacheLife("hours") // no Shopify webhook exists for blogs/pages/policies;
   if (!isShopifyConfigured()) return [];
   const data = await shopifyFetch<{
     blogs: Nodes<{ handle: string; articles: Nodes<{ handle: string; publishedAt: string }> }>;
@@ -506,7 +506,7 @@ export async function getArticlePaths(): Promise<{ blog: string; handle: string;
 export async function getPage(handle: string): Promise<ShopPage | undefined> {
   "use cache";
   cacheTag(TAGS.content, `page:${handle}`);
-  cacheLife("days");
+  cacheLife("hours") // no Shopify webhook exists for blogs/pages/policies;
   if (!isShopifyConfigured()) return undefined;
   const data = await shopifyFetch<{ page: ShopPage | null }>({
     query: getPageQuery,
@@ -518,7 +518,7 @@ export async function getPage(handle: string): Promise<ShopPage | undefined> {
 export async function getPolicies(): Promise<Policy[]> {
   "use cache";
   cacheTag(TAGS.content, "policies");
-  cacheLife("days");
+  cacheLife("hours") // no Shopify webhook exists for blogs/pages/policies;
   if (!isShopifyConfigured()) return fallbackPolicies;
   const data = await shopifyFetch<{ shop: Record<string, Policy | null | string> }>({
     query: getShopPoliciesQuery,
