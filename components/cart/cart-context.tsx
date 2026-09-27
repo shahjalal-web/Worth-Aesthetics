@@ -84,6 +84,7 @@ function applyOps(base: Cart | undefined, ops: Op[]): Cart {
               id: product.id,
               handle: product.handle,
               title: product.title,
+              productType: product.productType,
               featuredImage: product.featuredImage,
             },
           },

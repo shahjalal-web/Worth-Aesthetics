@@ -32,14 +32,20 @@ export function TrustRow({ className, compact = false }: { className?: string; c
 }
 
 /** Accepted payment methods (text badges — official marks TBC). */
-export function PaymentBadges({ className }: { className?: string }) {
+export function PaymentBadges({ className, compact = false }: { className?: string; compact?: boolean }) {
   const methods = ["Shop Pay", "Apple Pay", "G Pay", "PayPal", "Visa", "Mastercard", "Amex"];
   return (
-    <ul className={cn("flex flex-wrap items-center justify-center gap-1.5", className)} aria-label="Accepted payment methods">
+    <ul
+      className={cn("flex items-center justify-center", compact ? "flex-nowrap gap-1" : "flex-wrap gap-1.5", className)}
+      aria-label="Accepted payment methods"
+    >
       {methods.map((m) => (
         <li
           key={m}
-          className="rounded-[3px] border border-line px-1.5 py-0.5 font-display text-[9px] font-medium tracking-wider text-muted"
+          className={cn(
+            "shrink-0 rounded-[3px] border border-line font-display font-medium tracking-wider text-muted",
+            compact ? "px-1 py-px text-[8px]" : "px-1.5 py-0.5 text-[9px]",
+          )}
         >
           {m}
         </li>

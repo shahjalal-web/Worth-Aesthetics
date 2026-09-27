@@ -169,6 +169,7 @@ function reshapeProductCard(raw: RawProductCard): ProductCardData {
     id: raw.id,
     handle: raw.handle,
     title: raw.title,
+    productType: raw.productType,
     availableForSale: raw.availableForSale,
     tags: raw.tags,
     priceRange: raw.priceRange,
@@ -361,14 +362,21 @@ export async function getCollectionProducts({
   return { products: reshapeProductCards(nodes), filters: f, pageInfo };
 }
 
-export async function getProductRecommendations(productId: string): Promise<ProductCardData[]> {
+/**
+ * Shopify's own recommendation engine. RELATED = learned from browsing/purchase
+ * behaviour; COMPLEMENTARY = pairings set manually in the Search & Discovery app.
+ */
+export async function getProductRecommendations(
+  productId: string,
+  intent: "RELATED" | "COMPLEMENTARY" = "RELATED",
+): Promise<ProductCardData[]> {
   "use cache";
   cacheTag(TAGS.products);
   cacheLife("days");
   if (!isShopifyConfigured()) return [];
   const data = await shopifyFetch<{ productRecommendations: RawProductCard[] | null }>({
     query: getProductRecommendationsQuery,
-    variables: { productId },
+    variables: { productId, intent },
   });
   return reshapeProductCards(data.productRecommendations ?? []);
 }

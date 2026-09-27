@@ -36,7 +36,7 @@ const addressSchema = z.object({
   zoneCode: z
     .string({ error: "Please choose a state" })
     .transform((v, ctx) => toStateCode(v) ?? (ctx.addIssue({ code: "custom", message: "Please choose a valid US state" }), z.NEVER)),
-  zip: z.string().trim().min(3, "ZIP code is required").max(12),
+  zip: z.string().trim().regex(/^\d{5}(-\d{4})?$/, "Please enter a 5-digit US ZIP code, e.g. 10001"),
   territoryCode: z.literal("US", { error: "We currently ship within the United States only" }).default("US"),
   phoneNumber: z
     .string()
@@ -68,7 +68,11 @@ export async function saveAddressAction(_: FormState, form: FormData): Promise<F
       ? await customerFetch<{ customerAddressUpdate: Payload }>(ADDRESS_UPDATE, { addressId, address: parsed.data, defaultAddress })
       : await customerFetch<{ customerAddressCreate: Payload }>(ADDRESS_CREATE, { address: parsed.data, defaultAddress });
     const err = firstError("customerAddressUpdate" in data ? data.customerAddressUpdate : data.customerAddressCreate);
-    if (err) return { status: "error", message: err };
+    if (err) {
+      // Shopify validates ZIP against the chosen state — explain that in plain words.
+      const friendly = /zip/i.test(err) ? "This ZIP code doesn't match the selected state. Please check both." : err;
+      return { status: "error", message: friendly };
+    }
     revalidatePath("/account/addresses");
     return { status: "success", message: "Address saved." };
   } catch {

@@ -17,11 +17,11 @@ export function QuantityStepper({
   min?: number;
   max?: number;
   label?: string;
-  size?: "sm" | "md";
+  size?: "xs" | "sm" | "md";
   disabled?: boolean;
 }) {
-  const h = size === "sm" ? "h-9" : "h-12";
-  const w = size === "sm" ? "w-8" : "w-11";
+  const h = size === "xs" ? "h-8" : size === "sm" ? "h-9" : "h-12";
+  const w = size === "xs" ? "w-7" : size === "sm" ? "w-8" : "w-11";
   return (
     <div
       className={cn("inline-flex items-center border border-line", h)}

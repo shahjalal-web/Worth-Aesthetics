@@ -25,6 +25,7 @@ export const productCardFragment = /* GraphQL */ `
     id
     handle
     title
+    productType
     availableForSale
     tags
     options {
@@ -232,6 +233,7 @@ export const cartFragment = /* GraphQL */ `
               id
               handle
               title
+              productType
               featuredImage {
                 ...image
               }

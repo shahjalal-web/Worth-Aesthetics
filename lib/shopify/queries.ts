@@ -117,8 +117,8 @@ export const getCollectionProductsQuery = /* GraphQL */ `
 `;
 
 export const getProductRecommendationsQuery = /* GraphQL */ `
-  query getProductRecommendations($productId: ID!) {
-    productRecommendations(productId: $productId) {
+  query getProductRecommendations($productId: ID!, $intent: ProductRecommendationIntent = RELATED) {
+    productRecommendations(productId: $productId, intent: $intent) {
       ...productCard
     }
   }

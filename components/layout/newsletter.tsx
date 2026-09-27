@@ -10,8 +10,21 @@ export function NewsletterForm({ tone = "dark" }: { tone?: "dark" | "light" }) {
     status: "idle",
   });
 
+  if (state.status === "success") {
+    return (
+      <div role="status" className="animate-fade-up flex items-center gap-3 border-b border-line-strong py-3">
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-btn text-btn-fg" aria-hidden>
+          ✓
+        </span>
+        <p className="text-[14px]">{state.message}</p>
+      </div>
+    );
+  }
+
   return (
     <form action={action} className="w-full" noValidate>
+      <input type="hidden" name="source" value={tone === "dark" ? "footer" : "home"} />
+      <input type="text" name="company" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
       <div
         className={cn(
           "flex items-center border-b transition-colors focus-within:border-accent",
@@ -48,7 +61,7 @@ export function NewsletterForm({ tone = "dark" }: { tone?: "dark" | "light" }) {
         aria-live="polite"
         className={cn(
           "mt-3 min-h-5 text-[12px]",
-          state.status === "error" ? "text-accent" : tone === "dark" ? "text-band-muted" : "text-muted",
+          state.status === "error" ? "text-accent-ink" : tone === "dark" ? "text-band-muted" : "text-muted",
         )}
       >
         {state.message ??

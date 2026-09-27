@@ -1,6 +1,7 @@
 "use server";
 
 import { z } from "zod";
+import { createPrivateEntry, isAdminConfigured } from "@/lib/shopify/admin";
 
 export type ContactState = {
   status: "idle" | "success" | "error";
@@ -17,8 +18,8 @@ const schema = z.object({
 });
 
 /**
- * Sends the message via Resend when RESEND_API_KEY + CONTACT_TO_EMAIL are set.
- * TBC: client to confirm the support inbox / email provider.
+ * Stores every message privately in Shopify (metaobject `contact_message`) and,
+ * when RESEND_API_KEY + CONTACT_TO_EMAIL are set, also emails the team.
  */
 export async function sendContactAction(_: ContactState, formData: FormData): Promise<ContactState> {
   if (formData.get("company")) return { status: "success", message: "Message received." }; // bot
@@ -33,30 +34,46 @@ export async function sendContactAction(_: ContactState, formData: FormData): Pr
     return { status: "error", errors, values };
   }
 
+  const d = parsed.data;
   const { RESEND_API_KEY, CONTACT_TO_EMAIL } = process.env;
-  if (!RESEND_API_KEY || !CONTACT_TO_EMAIL) {
-    return {
-      status: "error",
-      values,
-      message: "Our contact form is being connected. Please email us directly in the meantime.",
-    };
+  let saved = false;
+  let emailed = false;
+
+  // 1) Always keep a copy in Shopify admin → Content → Metaobjects → Contact messages.
+  if (isAdminConfigured()) {
+    try {
+      await createPrivateEntry("contact_message", {
+        name: d.name,
+        email: d.email,
+        order_number: d.order || undefined,
+        message: d.message,
+        submitted_at: new Date().toISOString(),
+      });
+      saved = true;
+    } catch (e) {
+      console.error("contact save failed", e);
+    }
   }
 
-  const d = parsed.data;
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from: process.env.CONTACT_FROM_EMAIL || "Worth Aesthetics <onboarding@resend.dev>",
-      to: [CONTACT_TO_EMAIL],
-      reply_to: d.email,
-      subject: `Website enquiry${d.order ? ` — order ${d.order}` : ""} — ${d.name}`,
-      text: `Name: ${d.name}\nEmail: ${d.email}\nOrder: ${d.order || "—"}\n\n${d.message}`,
-    }),
-  });
-  if (!res.ok) {
-    console.error("contact send failed", res.status, await res.text());
+  // 2) Optionally email the team (Resend) when configured.
+  if (RESEND_API_KEY && CONTACT_TO_EMAIL) {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from: process.env.CONTACT_FROM_EMAIL || "Worth Aesthetics <onboarding@resend.dev>",
+        to: [CONTACT_TO_EMAIL],
+        reply_to: d.email,
+        subject: `Website enquiry${d.order ? ` — order ${d.order}` : ""} — ${d.name}`,
+        text: [`Name: ${d.name}`, `Email: ${d.email}`, `Order: ${d.order || "—"}`, "", d.message].join("\n"),
+      }),
+    }).catch(() => null);
+    emailed = Boolean(res?.ok);
+    if (res && !res.ok) console.error("contact email failed", res.status, await res.text());
+  }
+
+  if (!saved && !emailed) {
     return { status: "error", values, message: "We couldn't send your message. Please try again shortly." };
   }
-  return { status: "success", message: "We've received your message and will reply within one business day." };
+  return { status: "success", message: "Thank you — we've received your message and will reply within one business day." };
 }

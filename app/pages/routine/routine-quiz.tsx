@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ProductCard } from "@/components/product/product-card";
@@ -50,14 +51,66 @@ const QUESTIONS: Question[] = [
 
 const norm = (s: string) => s.toLowerCase().replace(/[^a-z]/g, "");
 
+const CONCERN_LABEL: Record<string, string> = {
+  wrinkles: "fine lines",
+  firmness: "firmness",
+  texture: "texture",
+  dullness: "radiance",
+  hydration: "hydration",
+};
+const STEP_LABEL: Record<string, string> = { Cleanser: "Cleanse", Serum: "Treat", Cream: "Seal" };
+
+type Pick = { product: ProductCardData; reason: string };
+
+/**
+ * Rule-based matching (no AI): every product's Shopify metafields
+ * `worth.skin_concerns` + `worth.skin_types` are compared with the answers.
+ * Concern match +3, exact skin-type match +1.5 ("All skin types" +1), in stock +0.5.
+ */
 function score(p: ProductCardData, answers: Record<string, string>) {
   let s = 0;
+  const reasons: string[] = [];
   const concerns = p.meta.skinConcerns.map(norm);
   const types = p.meta.skinTypes.map(norm);
-  if (answers.concern && concerns.some((c) => c.includes(answers.concern) || answers.concern.includes(c))) s += 3;
-  if (answers.type && (types.includes(answers.type) || types.some((t) => t.includes("all")))) s += 1;
+  if (answers.concern && concerns.some((c) => c.includes(answers.concern) || answers.concern.includes(c))) {
+    s += 3;
+    reasons.push(`Targets ${CONCERN_LABEL[answers.concern] ?? answers.concern}`);
+  }
+  if (answers.type && types.includes(answers.type)) {
+    s += 1.5;
+    reasons.push(`Suited to ${answers.type} skin`);
+  } else if (types.some((t) => t.includes("all"))) {
+    s += 1;
+    reasons.push("Suits all skin types");
+  }
   if (p.availableForSale) s += 0.5;
-  return s;
+  return { s, reason: reasons.join(" · ") || "A gentle everyday essential" };
+}
+
+/** Builds the routine by ritual step: essential = serum; duo = serum + cream; full = cleanser + serum + cream + one extra. */
+function buildRoutine(products: ProductCardData[], answers: Record<string, string>) {
+  const ranked = products
+    .filter((p) => p.variants.length && p.availableForSale)
+    .map((p) => ({ product: p, ...score(p, answers) }))
+    .sort((a, b) => b.s - a.s);
+  const taken = new Set<string>();
+  const best = (type: string) => {
+    const hit = ranked.find((r) => r.product.productType === type && !taken.has(r.product.id));
+    if (hit) taken.add(hit.product.id);
+    return hit;
+  };
+  const plan = answers.depth === "essential" ? ["Serum"] : answers.depth === "duo" ? ["Serum", "Cream"] : ["Cleanser", "Serum", "Cream"];
+  const picks = plan.map(best).filter(Boolean) as (typeof ranked)[number][];
+  if (answers.depth === "ritual") {
+    const extra = ranked.find((r) => ["Serum", "Cream"].includes(r.product.productType) && !taken.has(r.product.id) && r.s >= 3);
+    if (extra) picks.push(extra);
+  }
+  // Nothing typed yet (e.g. new catalogue)? fall back to the best overall matches.
+  const routine: Pick[] = (picks.length ? picks : ranked.filter((r) => r.product.productType !== "Accessory").slice(0, plan.length)).map(
+    (r) => ({ product: r.product, reason: r.reason }),
+  );
+  const set = ranked.find((r) => r.product.productType === "Set" && r.s >= 3);
+  return { routine, set: set ? { product: set.product, reason: set.reason } : null };
 }
 
 export function RoutineQuiz({ products }: { products: ProductCardData[] }) {
@@ -66,17 +119,11 @@ export function RoutineQuiz({ products }: { products: ProductCardData[] }) {
   const { addItems } = useCartActions();
 
   const done = step >= QUESTIONS.length;
-  const results = useMemo(() => {
-    if (!done) return [];
-    const count = answers.depth === "essential" ? 1 : answers.depth === "duo" ? 2 : 4;
-    return products
-      .filter((p) => p.variants.length)
-      .map((p) => ({ p, s: score(p, answers) }))
-      .sort((a, b) => b.s - a.s)
-      .slice(0, count)
-      .map(({ p }) => p)
-      .sort((a, b) => (a.meta.routineStep ?? "9").localeCompare(b.meta.routineStep ?? "9"));
-  }, [done, answers, products]);
+  const { routine, set } = useMemo(
+    () => (done ? buildRoutine(products, answers) : { routine: [] as Pick[], set: null }),
+    [done, answers, products],
+  );
+  const results = routine.map((r) => r.product);
 
   const total = results.reduce((sum, p) => sum + parseFloat(p.priceRange.minVariantPrice.amount), 0);
 
@@ -93,10 +140,15 @@ export function RoutineQuiz({ products }: { products: ProductCardData[] }) {
         {results.length ? (
           <>
             <ol className="mt-12 grid grid-cols-2 gap-x-4 gap-y-12 md:gap-x-6 lg:grid-cols-4 lg:gap-x-8">
-              {results.map((p, i) => (
-                <li key={p.id}>
-                  <p className="mb-3 text-center font-display text-[10px] tracking-[0.25em] text-accent-ink uppercase">Step {i + 1}</p>
-                  <ProductCard product={p} />
+              {routine.map(({ product: p, reason }, i) => (
+                <li key={p.id} className="flex flex-col">
+                  <p className="text-center font-display text-[10px] tracking-[0.25em] text-accent-ink uppercase">
+                    Step {i + 1}
+                    {STEP_LABEL[p.productType] &&
+                      ` · ${routine.slice(0, i).some((r) => r.product.productType === p.productType) ? "Boost" : STEP_LABEL[p.productType]}`}
+                  </p>
+                  <p className="mt-1 mb-3 text-center text-[11.5px] text-muted">{reason}</p>
+                  <ProductCard product={p} className="flex-1" />
                 </li>
               ))}
             </ol>
@@ -115,6 +167,23 @@ export function RoutineQuiz({ products }: { products: ProductCardData[] }) {
                 >
                   Add the ritual to bag · {formatMoney({ amount: total, currencyCode: results[0].priceRange.minVariantPrice.currencyCode })}
                 </Button>
+              </div>
+            )}
+            {set && (
+              <div className="mx-auto mt-16 grid max-w-3xl items-center gap-6 border border-line bg-bg-soft p-6 sm:grid-cols-[160px_1fr] md:p-8">
+                <Link href={`/products/${set.product.handle}`} className="relative block aspect-square overflow-hidden bg-surface">
+                  {set.product.featuredImage && (
+                    <Image src={set.product.featuredImage.url} alt={set.product.title} fill sizes="160px" className="object-cover" />
+                  )}
+                </Link>
+                <div>
+                  <p className="eyebrow text-accent-ink">Prefer a set?</p>
+                  <p className="title-caps mt-2 text-[15px]">{set.product.title}</p>
+                  <p className="mt-1 text-[12.5px] text-muted">{set.reason}</p>
+                  <Link href={`/products/${set.product.handle}`} className={buttonClasses({ variant: "outline", size: "sm", className: "mt-4" })}>
+                    View the set
+                  </Link>
+                </div>
               </div>
             )}
           </>

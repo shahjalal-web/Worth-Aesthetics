@@ -11,7 +11,10 @@ import { cn } from "@/lib/utils";
 const input =
   "mt-2 h-12 w-full border border-line bg-bg px-4 text-[14px] placeholder:text-muted focus:border-accent focus:outline-none";
 
-function Field({ label, name, defaultValue, required, autoComplete, className, placeholder }: {
+function Field({ label, name, defaultValue, required, autoComplete, className, placeholder, inputMode, pattern, title }: {
+  inputMode?: "numeric" | "tel" | "email" | "text";
+  pattern?: string;
+  title?: string;
   label: string;
   name: string;
   defaultValue?: string | null;
@@ -26,7 +29,7 @@ function Field({ label, name, defaultValue, required, autoComplete, className, p
         {label}
         {required && <span className="text-accent-ink"> *</span>}
       </span>
-      <input name={name} defaultValue={defaultValue ?? ""} required={required} autoComplete={autoComplete} placeholder={placeholder} className={input} />
+      <input name={name} defaultValue={defaultValue ?? ""} required={required} autoComplete={autoComplete} placeholder={placeholder} inputMode={inputMode} pattern={pattern} title={title} className={input} />
     </label>
   );
 }
@@ -113,7 +116,7 @@ export function AddressForm({ address, onDone }: { address?: CustomerAddress; on
       <Field label="Apartment, suite" name="address2" defaultValue={address?.address2} autoComplete="address-line2" className="sm:col-span-2" />
       <Field label="City" name="city" defaultValue={address?.city} required autoComplete="address-level2" />
       <Select label="State" name="zoneCode" defaultValue={address?.zoneCode} options={US_STATES} required autoComplete="address-level1" />
-      <Field label="ZIP code" name="zip" defaultValue={address?.zip} required autoComplete="postal-code" />
+      <Field label="ZIP code" name="zip" defaultValue={address?.zip} required autoComplete="postal-code" placeholder="10001" inputMode="numeric" pattern="\d{5}(-\d{4})?" title="5-digit US ZIP code, e.g. 10001" />
       <Select label="Country" name="territoryCode" defaultValue="US" options={[["US", "United States"]]} required autoComplete="country" />
       <Field label="Phone" name="phoneNumber" defaultValue={address?.phoneNumber} autoComplete="tel" placeholder="+1 212 555 0100" className="sm:col-span-2" />
       <label className="flex items-center gap-3 text-[13px] sm:col-span-2">

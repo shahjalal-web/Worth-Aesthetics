@@ -1,16 +1,16 @@
 import { siteConfig } from "@/lib/site-config";
 import type { Money } from "@/lib/shopify/types";
-import { formatMoney, toNumber } from "@/lib/utils";
+import { cn, formatMoney, toNumber } from "@/lib/utils";
 
-export function FreeShippingBar({ subtotal }: { subtotal: Money }) {
+export function FreeShippingBar({ subtotal, compact = false }: { subtotal: Money; compact?: boolean }) {
   const threshold = siteConfig.freeShippingThreshold;
   const current = toNumber(subtotal);
   const remaining = Math.max(threshold - current, 0);
   const progress = Math.min(current / threshold, 1);
 
   return (
-    <div className="space-y-3">
-      <p className="text-center text-[13px] text-fg" aria-live="polite">
+    <div className={compact ? "space-y-2" : "space-y-3"}>
+      <p className={cn("text-center text-fg", compact ? "text-[12px]" : "text-[13px]")} aria-live="polite">
         {remaining > 0 ? (
           <>
             You&apos;re{" "}
@@ -21,7 +21,7 @@ export function FreeShippingBar({ subtotal }: { subtotal: Money }) {
           </>
         ) : (
           <>
-            <span className="serif-italic text-base text-accent-ink">Wonderful</span> — your order
+            <span className={cn("serif-italic text-accent-ink", compact ? "text-[14px]" : "text-base")}>Wonderful</span> — your order
             ships complimentary
           </>
         )}

@@ -77,6 +77,7 @@ export type ProductCardData = Pick<
   | "id"
   | "handle"
   | "title"
+  | "productType"
   | "availableForSale"
   | "priceRange"
   | "compareAtPriceRange"
@@ -129,6 +130,7 @@ export type CartLine = {
       id: string;
       handle: string;
       title: string;
+      productType?: string;
       featuredImage: Image | null;
     };
   };

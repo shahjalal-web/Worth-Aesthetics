@@ -36,6 +36,13 @@ npx tsx scripts/screenshot.mts http://localhost:3000/ <outDir> light|dark   # vi
 - ✅ Address form bug ("Too big: expected string to have <=3 characters" when typing a full state name) → US state `<select>` (`lib/us-states.ts`), server accepts code or name, phone normalised to E.164, country fixed to US.
 - ✅ Branded sign-in / create-account page (`components/account/sign-in.tsx`): split layout, tabs, email forwarded as `login_hint` + `login_hint_mode=submit`, "Continue with Shop".
 - ℹ️ Login methods: Customer Account API (required by CLAUDE.md) offers only email one-time code + Shop. Email+password needs *legacy* accounts (deprecated by Shopify); Google/phone need a third-party app + custom auth — awaiting owner decision.
+- ✅ Cart drawer redesigned (compact header/lines/footer, horizontal upsell cards with reasons). Upsell is now cart-aware: `/api/recommendations` → `lib/recommendations.ts` (Search & Discovery COMPLEMENTARY +4, missing ritual step +3, Shopify RELATED +2, bestsellers fallback).
+- ✅ Quiz: rule-based (no AI) — builds by ritual step (cleanser/serum/cream), shows why each product matched, suggests a matching set. `productType` added to card + cart line fragments.
+- ✅ ZIP validation (5-digit US) + friendly message when Shopify rejects ZIP/state combination.
+- ✅ Contact form works: saved privately in Shopify (metaobject `contact_message`, admin → Content → Metaobjects) + optional Resend email. Newsletter works: Shopify customer with email-marketing consent (needs `write_customers` scope — not granted yet) → falls back to private `newsletter_signup` metaobject. `scripts/setup-forms.mts` created both definitions (run 2026-09-27). Runtime Admin client `lib/shopify/admin.ts` (server-only) — deliberate, owner-requested exception to the "Admin API only in scripts" rule. QA entries: qa-test@example.com / qa-newsletter@example.com.
+- ✅ Home: tabbed "Shop the edit" carousel (Bestsellers/New/Sets/Shop all, 12 each, arrows + progress), "Shop by concern" tiles, "Our story" split (reference-site parity).
+- ⛔ **0 webhook subscriptions** on the store → edits in Shopify won't refresh the Vercel site until `scripts/setup-webhooks.mts --url https://worth-aesthetics.vercel.app` is run (awaiting owner OK) and `SHOPIFY_REVALIDATION_SECRET` is set on Vercel.
+- ℹ️ Vercel env must include SHOPIFY_APP_CLIENT_ID / SHOPIFY_APP_CLIENT_SECRET for the contact/newsletter storage.
 - ℹ️ Login cannot work on http://localhost (Shopify only accepts https callbacks) — test on Vercel or via an https tunnel.
 
 ---
