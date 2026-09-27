@@ -16,8 +16,9 @@ npx tsx scripts/screenshot.mts http://localhost:3000/ <outDir> light|dark   # vi
 ```
 
 **Next up (in order):**
+0. ⏳ Client (message sent): design feedback, buy a domain, set sales tax + shipping rates, enable payment providers (Settings → Payments). Then: connect domain, update Customer Account URIs + NEXT_PUBLIC_SITE_URL + webhooks to the new domain.
 1. ⏳ Owner: Shopify admin → Sales channels → Headless → storefront → Customer Account API → Application setup: callback `https://worth-aesthetics.vercel.app/account/authorize`, JavaScript origin `https://worth-aesthetics.vercel.app`, logout `https://worth-aesthetics.vercel.app/`. Vercel env `NEXT_PUBLIC_SITE_URL=https://worth-aesthetics.vercel.app` → redeploy. Then test login → order history.
-2. ⏳ `scripts/setup-webhooks.mts --url https://worth-aesthetics.vercel.app` (needs owner OK — live store).
+2. ✅ Webhooks registered for worth-aesthetics.vercel.app (re-run with the final domain later).
 3. ⏳ Owner: Settings → Policies → "Create from template" for Refund / Shipping / Terms (interim summaries show until then).
 4. ⏳ Rename store "My Store" → "Worth Aesthetics" (shows on checkout); place a test order (Bogus gateway).
 5. ⏳ Search & Discovery filters for `worth.skin_concerns` / `worth.skin_types`.
@@ -41,7 +42,9 @@ npx tsx scripts/screenshot.mts http://localhost:3000/ <outDir> light|dark   # vi
 - ✅ ZIP validation (5-digit US) + friendly message when Shopify rejects ZIP/state combination.
 - ✅ Contact form works: saved privately in Shopify (metaobject `contact_message`, admin → Content → Metaobjects) + optional Resend email. Newsletter works: Shopify customer with email-marketing consent (needs `write_customers` scope — not granted yet) → falls back to private `newsletter_signup` metaobject. `scripts/setup-forms.mts` created both definitions (run 2026-09-27). Runtime Admin client `lib/shopify/admin.ts` (server-only) — deliberate, owner-requested exception to the "Admin API only in scripts" rule. QA entries: qa-test@example.com / qa-newsletter@example.com.
 - ✅ Home: tabbed "Shop the edit" carousel (Bestsellers/New/Sets/Shop all, 12 each, arrows + progress), "Shop by concern" tiles, "Our story" split (reference-site parity).
-- ⛔ **0 webhook subscriptions** on the store → edits in Shopify won't refresh the Vercel site until `scripts/setup-webhooks.mts --url https://worth-aesthetics.vercel.app` is run (awaiting owner OK) and `SHOPIFY_REVALIDATION_SECRET` is set on Vercel.
+- ✅ Webhooks registered → https://worth-aesthetics.vercel.app/api/revalidate (products ×3, collections ×3, inventory, metaobjects ×3 with type filter, shop/update). Signed test POST to Vercel → 200, tags revalidated. Blogs/pages/policies have no webhook topic → cacheLife "hours".
+- ✅ Live Vercel contact form verified (Vercel has the app credentials).
+- ✅ QA: axe (WCAG 2.2 AA) clean on 10 key pages in light + dark; mobile 390px no overflow; Lighthouse mobile on Vercel: Home 95 / PLP 92 / PDP 98 performance, a11y 100/99→fixed/100, BP 100, SEO 100. Fixed: hero slow-zoom animation made Chrome report NO_LCP; heading order; label/name mismatch.
 - ℹ️ Vercel env must include SHOPIFY_APP_CLIENT_ID / SHOPIFY_APP_CLIENT_SECRET for the contact/newsletter storage.
 - ℹ️ Login cannot work on http://localhost (Shopify only accepts https callbacks) — test on Vercel or via an https tunnel.
 

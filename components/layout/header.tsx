@@ -130,7 +130,7 @@ function HeaderInner({ pathname }: { pathname: string | null }) {
         </div>
 
         {/* Center: logo */}
-        <Link href="/" aria-label="Worth Aesthetics — home" className="justify-self-center px-2">
+        <Link href="/" className="justify-self-center px-2">
           <Logo />
         </Link>
 

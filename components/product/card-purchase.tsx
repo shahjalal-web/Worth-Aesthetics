@@ -59,7 +59,7 @@ export function CardPurchase({ product }: { product: ProductCardData }) {
           "disabled:border-line disabled:text-muted disabled:hover:bg-transparent",
           "md:group-hover:border-btn md:group-hover:bg-btn md:group-hover:text-btn-fg",
         )}
-        aria-label={`Add ${product.title}${hasChoices ? ` (${selected.title})` : ""} to bag`}
+        aria-label={`${selected.availableForSale ? "Add to bag" : "Sold out"}: ${product.title}${hasChoices ? ` (${selected.title})` : ""}`}
       >
         {selected.availableForSale ? "Add to bag" : "Sold out"}
       </button>

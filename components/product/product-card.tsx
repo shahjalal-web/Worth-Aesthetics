@@ -36,7 +36,7 @@ export function ProductCard({
 
   return (
     <article className={cn("group relative flex h-full flex-col", className)}>
-      <Link href={href} className="relative block aspect-[4/5] overflow-hidden bg-surface" aria-label={product.title}>
+      <Link href={href} className="relative block aspect-[4/5] overflow-hidden bg-surface">
         <ProductBadge product={product} />
         <ProductImage
           image={primary}

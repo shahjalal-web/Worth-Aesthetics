@@ -140,6 +140,7 @@ async function CollectionGrid({ params, searchParams }: PageProps<"/collections/
   return (
     <div className="pt-8">
       <CollectionToolbar filters={data.filters} count={data.products.length}>
+      <h2 className="sr-only">Products</h2>
       {data.products.length ? (
         <ul
           className={
