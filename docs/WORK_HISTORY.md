@@ -32,6 +32,8 @@ npx tsx scripts/screenshot.mts http://localhost:3000/ <outDir> light|dark   # vi
 - ✅ Consent: `storefrontRootDomain` = root domain (no www) so consent is shared with checkout.<domain>; local `.env` NEXT_PUBLIC_SHOPIFY_CHECKOUT_DOMAIN=checkout.worthaesthetics.com (**Vercel env must be updated too**).
 - ✅ **Official logo** from client vector ("client update/Worth Aesthetics 2.ai") → `components/brand/logo-paths.ts` (MONOGRAM, WORDMARK, LOCKUP extracted with PyMuPDF). Used in header, mobile menu, footer, sign-in (stacked), favicon (`app/icon.svg`, light/dark), apple icon + OG image (client champagne #C4AE74 / #EDEDED), `public/brand/logo.svg` + `logo.png` (Organization JSON-LD).
 - ℹ️ Demo product packshots still carry the old interim hexagon mark (rendered earlier). Re-render + replace media only with owner OK (involves removing old product media).
+- ✅ `write_customers` granted → newsletter now creates Shopify customers (tag `newsletter`, email marketing SUBSCRIBED); verified live with qa-newsletter-shopify@example.com. Earlier sign-ups remain in the `newsletter_signup` metaobject.
+- ✅ Customer Account www URIs confirmed working (Shopify login page opens from www).
 - ⏳ Owner: add www URIs in Shopify → Headless → Customer Account API (callback `https://www.worthaesthetics.com/account/authorize`, origin, logout); rename store "My Store".
 
 ---

@@ -44,7 +44,7 @@ Items the storefront currently shows as placeholders. Nothing here should be pre
 - [x] ~~Official logo vector~~ — received and in use 2026-09-28.
 - [ ] Payment providers: Settings → Payments (Shopify Payments / PayPal) — client must enable (business + bank details). Checkout currently shows Shop only.
 - [ ] Sales tax + shipping rates (Settings → Taxes / Shipping and delivery) — client to set or send details.
-- [ ] Newsletter → Shopify customers: add `write_customers` scope to the app (currently stored in the `newsletter_signup` metaobject).
+- [x] ~~Newsletter → Shopify customers~~ — `write_customers` granted 2026-09-28; working.
 - [ ] Contact emails: Resend API key + inbox (messages are already stored in Shopify admin → Content → Metaobjects).
 - [ ] **Demo catalogue:** 16 placeholder products (tag `demo`) + 6 Journal articles (tag `demo`) were added so the site isn't empty. Archive/replace them once the real range, prices and photography are final (Products → filter by tag `demo` → Archive).
 - [ ] Policies: create Refund / Shipping / Terms in Settings → Policies (interim summaries are shown until then). Confirm dispatch cut-off and returns window.
