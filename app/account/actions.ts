@@ -2,7 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { toStateCode } from "@/lib/us-states";
+import { toStateCode, US_STATES } from "@/lib/us-states";
+import { stateForZip } from "@/lib/us-zip";
 import { ADDRESS_CREATE, ADDRESS_DELETE, ADDRESS_UPDATE, CUSTOMER_UPDATE, customerFetch } from "@/lib/customer/api";
 
 export type FormState = { status: "idle" | "success" | "error"; message?: string };
@@ -70,8 +71,16 @@ export async function saveAddressAction(_: FormState, form: FormData): Promise<F
     const err = firstError("customerAddressUpdate" in data ? data.customerAddressUpdate : data.customerAddressCreate);
     if (err) {
       // Shopify validates ZIP against the chosen state — explain that in plain words.
-      const friendly = /zip/i.test(err) ? "This ZIP code doesn't match the selected state. Please check both." : err;
-      return { status: "error", message: friendly };
+      if (/zip|postal/i.test(err)) {
+        const expected = stateForZip(parsed.data.zip);
+        const name = (code?: string) => US_STATES.find(([c]) => c === code)?.[1] ?? code;
+        const hint =
+          expected && expected !== parsed.data.zoneCode
+            ? `ZIP ${parsed.data.zip} is in ${name(expected)}, but ${name(parsed.data.zoneCode)} is selected.`
+            : "Shopify couldn't verify this ZIP code for the selected state.";
+        return { status: "error", message: `${hint} Please check both. (Shopify: ${err})` };
+      }
+      return { status: "error", message: err };
     }
     revalidatePath("/account/addresses");
     return { status: "success", message: "Address saved." };

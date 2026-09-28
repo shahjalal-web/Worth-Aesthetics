@@ -112,7 +112,7 @@ export function ConsentBanner() {
                   type="checkbox"
                   checked={prefs[t.key]}
                   onChange={(e) => setPrefs((p) => ({ ...p, [t.key]: e.target.checked }))}
-                  className="mt-1 size-4 shrink-0 accent-[var(--accent)]"
+                  className="mt-1 size-4 shrink-0 accent-accent"
                 />
               </label>
             </li>

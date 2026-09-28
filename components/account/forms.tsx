@@ -5,13 +5,15 @@ import { saveAddressAction, updateProfileAction, type FormState } from "@/app/ac
 import { Button } from "@/components/ui/button";
 import { ChevronDownIcon } from "@/components/ui/icons";
 import { US_STATES } from "@/lib/us-states";
+import { stateForZip } from "@/lib/us-zip";
 import type { CustomerAddress } from "@/lib/customer/api";
 import { cn } from "@/lib/utils";
 
 const input =
   "mt-2 h-12 w-full border border-line bg-bg px-4 text-[14px] placeholder:text-muted focus:border-accent focus:outline-none";
 
-function Field({ label, name, defaultValue, required, autoComplete, className, placeholder, inputMode, pattern, title }: {
+function Field({ label, name, defaultValue, required, autoComplete, className, placeholder, inputMode, pattern, title, onChange }: {
+  onChange?: (value: string) => void;
   inputMode?: "numeric" | "tel" | "email" | "text";
   pattern?: string;
   title?: string;
@@ -29,12 +31,14 @@ function Field({ label, name, defaultValue, required, autoComplete, className, p
         {label}
         {required && <span className="text-accent-ink"> *</span>}
       </span>
-      <input name={name} defaultValue={defaultValue ?? ""} required={required} autoComplete={autoComplete} placeholder={placeholder} inputMode={inputMode} pattern={pattern} title={title} className={input} />
+      <input name={name} defaultValue={defaultValue ?? ""} required={required} autoComplete={autoComplete} placeholder={placeholder} inputMode={inputMode} pattern={pattern} title={title} onChange={onChange ? (e) => onChange(e.target.value) : undefined} className={input} />
     </label>
   );
 }
 
-function Select({ label, name, defaultValue, options, required, autoComplete }: {
+function Select({ label, name, defaultValue, value, onChange, options, required, autoComplete }: {
+  value?: string;
+  onChange?: (value: string) => void;
   label: string;
   name: string;
   defaultValue?: string | null;
@@ -51,12 +55,12 @@ function Select({ label, name, defaultValue, options, required, autoComplete }: 
       <span className="relative mt-2 block">
         <select
           name={name}
-          defaultValue={defaultValue ?? ""}
+          {...(value !== undefined ? { value, onChange: (e) => onChange?.(e.target.value) } : { defaultValue: defaultValue ?? "" })}
           required={required}
           autoComplete={autoComplete}
           className={cn(input, "mt-0 appearance-none pr-10")}
         >
-          {!defaultValue && <option value="" disabled>Select…</option>}
+          {!(value ?? defaultValue) && <option value="" disabled>Select…</option>}
           {options.map(([value, text]) => (
             <option key={value} value={value}>
               {text}
@@ -105,6 +109,8 @@ export function AddressForm({ address, onDone }: { address?: CustomerAddress; on
     if (result.status === "success") onDone?.();
     return result;
   }, { status: "idle" } as FormState);
+  // Pre-select the state from the ZIP so the two always agree.
+  const [zone, setZone] = useState(address?.zoneCode ?? "");
 
   return (
     <form action={action} className="grid gap-5 sm:grid-cols-2">
@@ -115,8 +121,8 @@ export function AddressForm({ address, onDone }: { address?: CustomerAddress; on
       <Field label="Address" name="address1" defaultValue={address?.address1} required autoComplete="address-line1" className="sm:col-span-2" />
       <Field label="Apartment, suite" name="address2" defaultValue={address?.address2} autoComplete="address-line2" className="sm:col-span-2" />
       <Field label="City" name="city" defaultValue={address?.city} required autoComplete="address-level2" />
-      <Select label="State" name="zoneCode" defaultValue={address?.zoneCode} options={US_STATES} required autoComplete="address-level1" />
-      <Field label="ZIP code" name="zip" defaultValue={address?.zip} required autoComplete="postal-code" placeholder="10001" inputMode="numeric" pattern="\d{5}(-\d{4})?" title="5-digit US ZIP code, e.g. 10001" />
+      <Select label="State" name="zoneCode" value={zone} onChange={setZone} options={US_STATES} required autoComplete="address-level1" />
+      <Field label="ZIP code" name="zip" defaultValue={address?.zip} required autoComplete="postal-code" placeholder="10001" inputMode="numeric" pattern="\d{5}(-\d{4})?" title="5-digit US ZIP code, e.g. 10001" onChange={(v) => { const st = stateForZip(v); if (st && US_STATES.some(([c]) => c === st)) setZone(st); }} />
       <Select label="Country" name="territoryCode" defaultValue="US" options={[["US", "United States"]]} required autoComplete="country" />
       <Field label="Phone" name="phoneNumber" defaultValue={address?.phoneNumber} autoComplete="tel" placeholder="+1 212 555 0100" className="sm:col-span-2" />
       <label className="flex items-center gap-3 text-[13px] sm:col-span-2">
