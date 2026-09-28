@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { LogoMark } from "@/components/brand/logo";
+import { LogoStacked } from "@/components/brand/logo";
 import { buttonClasses } from "@/components/ui/button";
 import { ArrowRightIcon, LockIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
@@ -80,7 +80,7 @@ export function SignIn({ error, returnTo = "/account", initialMode = "signin" }:
 
       {/* Form panel */}
       <div className="flex flex-col justify-center px-6 py-12 sm:px-12 md:py-16 lg:px-16">
-        <LogoMark className="size-11 text-fg" />
+        <LogoStacked className="h-24 w-auto self-start text-fg" />
 
         <div role="tablist" aria-label="Account" className="mt-10 grid grid-cols-2 border-b border-line">
           {(["signin", "signup"] as const).map((m) => (

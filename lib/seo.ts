@@ -61,6 +61,6 @@ export function organizationJsonLd() {
     "@type": "Organization",
     name: siteConfig.name,
     url: absoluteUrl("/"),
-    logo: absoluteUrl("/brand/logo.svg"), // interim mark — replace with official logo when supplied
+    logo: absoluteUrl("/brand/logo.png"), // official lockup (client artwork), raster for Google
   };
 }

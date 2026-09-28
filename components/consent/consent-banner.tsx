@@ -29,7 +29,8 @@ function syncWithShopify(c: Consent) {
         sale_of_data: c.saleOfData,
         headlessStorefront: true,
         checkoutRootDomain: domain,
-        storefrontRootDomain: window.location.hostname,
+        // Root domain (no "www.") so the consent cookie is shared with checkout.<domain>.
+        storefrontRootDomain: window.location.hostname.replace(/^www\./, ""),
         storefrontAccessToken: token,
       },
       () => undefined,

@@ -26,6 +26,16 @@ npx tsx scripts/screenshot.mts http://localhost:3000/ <outDir> light|dark   # vi
 
 ---
 
+## Session 5 — 2026-09-28
+- ✅ Domain live: **https://www.worthaesthetics.com** (apex → www 308, Vercel). Checkout: **checkout.worthaesthetics.com** (Shopify primary domain; `cart.checkoutUrl` now uses it). Sitemap + login redirect_uri already use www (NEXT_PUBLIC_SITE_URL set on Vercel).
+- ✅ Webhooks registered for https://www.worthaesthetics.com/api/revalidate (11 topics); signed test → 200. Old vercel.app subscriptions still exist (harmless duplicates — delete in Shopify admin if desired).
+- ✅ Consent: `storefrontRootDomain` = root domain (no www) so consent is shared with checkout.<domain>; local `.env` NEXT_PUBLIC_SHOPIFY_CHECKOUT_DOMAIN=checkout.worthaesthetics.com (**Vercel env must be updated too**).
+- ✅ **Official logo** from client vector ("client update/Worth Aesthetics 2.ai") → `components/brand/logo-paths.ts` (MONOGRAM, WORDMARK, LOCKUP extracted with PyMuPDF). Used in header, mobile menu, footer, sign-in (stacked), favicon (`app/icon.svg`, light/dark), apple icon + OG image (client champagne #C4AE74 / #EDEDED), `public/brand/logo.svg` + `logo.png` (Organization JSON-LD).
+- ℹ️ Demo product packshots still carry the old interim hexagon mark (rendered earlier). Re-render + replace media only with owner OK (involves removing old product media).
+- ⏳ Owner: add www URIs in Shopify → Headless → Customer Account API (callback `https://www.worthaesthetics.com/account/authorize`, origin, logout); rename store "My Store".
+
+---
+
 ## Session 4 — 2026-09-27
 - ✅ Deployed on Vercel: **https://worth-aesthetics.vercel.app** (repo remote `myrepo` → github.com/shahjalal-web/Worth-Aesthetics, branch `main`). Login gives *redirect_uri mismatch* until the owner adds the callback URIs (see Next up #1) — code already sends the correct https URI.
 - ✅ Brighter palette (owner found it too deep): new `--band*` tokens — announcement bar, science band, footer, dark page heroes, promo tile are now bright champagne in light mode (dark mode unchanged). Primary buttons = champagne `#C9B084` with charcoal text (6.7:1). Lighter surface/line tokens.

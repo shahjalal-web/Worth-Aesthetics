@@ -40,7 +40,8 @@ Items the storefront currently shows as placeholders. Nothing here should be pre
 - [x] ~~Customer Account API client ID~~ — received (public client, PKCE).
 - [ ] Add https callback/origin/logout URIs in Headless → Customer Account API once the domain is live (Shopify rejects localhost).
 - [ ] Rename the store from "My Store" (Settings → General) — it shows on checkout.
-- [ ] Production domain (currently https://worth-aesthetics.vercel.app) — client to buy.
+- [x] ~~Production domain~~ — www.worthaesthetics.com live 2026-09-28; checkout.worthaesthetics.com connected.
+- [x] ~~Official logo vector~~ — received and in use 2026-09-28.
 - [ ] Payment providers: Settings → Payments (Shopify Payments / PayPal) — client must enable (business + bank details). Checkout currently shows Shop only.
 - [ ] Sales tax + shipping rates (Settings → Taxes / Shipping and delivery) — client to set or send details.
 - [ ] Newsletter → Shopify customers: add `write_customers` scope to the app (currently stored in the `newsletter_signup` metaobject).
